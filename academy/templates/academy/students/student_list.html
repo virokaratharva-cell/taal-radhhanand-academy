@@ -1,0 +1,168 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Students — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Student Directory{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-people text-warning"></i> Enrolled Students Directory</h3>
+            <p class="text-muted small mb-0">Manage student admissions, monthly tuition fees, batches, and contact details.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'export_students_csv' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-download"></i> Export CSV
+            </a>
+            <a href="{% url 'student_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-person-plus-fill"></i> Add Student
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border">
+        <div class="col-12 col-md-4">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search name, ID, phone, WhatsApp...">
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="status" class="form-select form-select-sm">
+                <option value="">-- All Statuses --</option>
+                {% for code, label in status_choices %}
+                <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="batch" class="form-select form-select-sm">
+                <option value="">-- All Batches --</option>
+                {% for b in batches %}
+                <option value="{{ b.id }}" {% if batch_filter == b.id|stringformat:"i" %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="level" class="form-select form-select-sm">
+                <option value="">-- All Levels --</option>
+                {% for code, label in level_choices %}
+                <option value="{{ code }}" {% if level_filter == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-1">
+            <div class="form-check pt-1">
+                <input class="form-check-input" type="checkbox" name="archived" value="1" id="archivedCheck" {% if request.GET.archived == '1' %}checked{% endif %}>
+                <label class="form-check-label small" for="archivedCheck">Archived</label>
+            </div>
+        </div>
+        <div class="col-12 col-md-1 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-taal-primary w-100">Filter</button>
+            {% if query or status_filter or batch_filter or level_filter or request.GET.archived %}
+            <a href="{% url 'student_list' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-circle"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Students Table -->
+    {% if page_obj.object_list %}
+    <div class="taal-table-responsive">
+        <table class="taal-table">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Level</th>
+                    <th>Status</th>
+                    <th>Active Batch(es)</th>
+                    <th>Monthly Fee</th>
+                    <th>Admission</th>
+                    <th>WhatsApp / Contact</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in page_obj.object_list %}
+                <tr>
+                    <td>
+                        <span class="badge bg-light text-dark font-monospace border">{{ s.student_id }}</span>
+                    </td>
+                    <td>
+                        <strong><a href="{% url 'student_detail' s.id %}" class="text-decoration-none text-dark">{{ s.full_name }}</a></strong>
+                        {% if s.is_archived %}
+                        <span class="badge bg-secondary ms-1">Archived</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ s.get_level_display }}</td>
+                    <td>
+                        <span class="badge-status {{ s.status }}">{{ s.get_status_display }}</span>
+                    </td>
+                    <td>
+                        {% with active_enrollments=s.enrollments.all %}
+                            {% for enr in active_enrollments %}
+                                {% if enr.is_active %}
+                                <span class="badge bg-secondary-subtle text-dark border me-1">{{ enr.batch.name }}</span>
+                                {% endif %}
+                            {% empty %}
+                            <span class="text-muted small">None</span>
+                            {% endfor %}
+                        {% endwith %}
+                    </td>
+                    <td class="fw-semibold text-success">₹{{ s.monthly_fee }}</td>
+                    <td>{{ s.enrollment_date|date:"d M Y" }}</td>
+                    <td>
+                        {% if s.guardian_whatsapp %}
+                        <div class="small text-success"><i class="bi bi-whatsapp"></i> {{ s.guardian_whatsapp }}</div>
+                        {% else %}
+                        <div class="small text-muted">{{ s.phone|default:"--" }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'student_detail' s.id %}" class="btn btn-outline-secondary" title="View Profile">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'payment_create' %}?student={{ s.id }}" class="btn btn-outline-success" title="Record Fee Payment">
+                                <i class="bi bi-receipt"></i>
+                            </a>
+                            <a href="{% url 'student_edit' s.id %}" class="btn btn-outline-primary" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} students</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&status={{ status_filter }}&batch={{ batch_filter }}&level={{ level_filter }}{% if request.GET.archived %}&archived=1{% endif %}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&status={{ status_filter }}&batch={{ batch_filter }}&level={{ level_filter }}{% if request.GET.archived %}&archived=1{% endif %}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-people"></i></div>
+        <div class="empty-state-title">No Students Found</div>
+        <div class="empty-state-text">No student records matched your search filters. Click below to add a student to Radhhanand Sangeet Vidyalaya.</div>
+        <a href="{% url 'student_create' %}" class="btn btn-taal-primary"><i class="bi bi-person-plus-fill"></i> Add Student</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

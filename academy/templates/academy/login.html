@@ -1,0 +1,62 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Teacher Login — Radhhanand Sangeet Vidyalaya{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center min-vh-75 py-5">
+    <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+        <div class="taal-card border-top border-4 border-warning shadow-lg text-center p-4 p-sm-5">
+            <div class="mb-4">
+                <div class="brand-icon mx-auto mb-3" style="width: 56px; height: 56px; font-size: 26px;">
+                    <i class="bi bi-disc"></i>
+                </div>
+                <h2 class="h4 fw-bold mb-1 brand-font" style="font-size: 1.3rem;">Radhhanand Sangeet Vidyalaya</h2>
+                <div class="text-muted small text-uppercase letter-spacing-1">Tabla & Music Academy Portal</div>
+                <p class="text-secondary small mt-2">"Preserving Tradition. Nurturing Artistry. Mastering Rhythm."</p>
+            </div>
+
+            <form method="POST" novalidate class="text-start">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label for="id_username" class="form-label small fw-semibold text-muted text-uppercase">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+                        <input type="text" name="username" autofocus required class="form-control border-start-0" id="id_username" placeholder="Enter teacher username">
+                    </div>
+                    {% if form.username.errors %}
+                    <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_password" class="form-label small fw-semibold text-muted text-uppercase">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock"></i></span>
+                        <input type="password" name="password" required class="form-control border-start-0" id="id_password" placeholder="Enter password">
+                    </div>
+                    {% if form.password.errors %}
+                    <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-taal-primary w-100 py-2 fs-6 shadow-sm">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Academy
+                </button>
+            </form>
+
+            <div class="mt-4 pt-3 border-top text-muted small">
+                <i class="bi bi-shield-check text-success me-1"></i> Secure Teacher Authentication
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

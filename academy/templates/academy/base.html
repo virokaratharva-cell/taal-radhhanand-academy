@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>{% block title %}{{ academy_settings.academy_name|default:"TAAL" }}{% endblock %} — Tabla & Music Academy</title>
+    
+    <!-- PWA & Mobile Web App Meta -->
+    <meta name="theme-color" content="#7A1C2C">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Radhhanand">
+    <meta name="application-name" content="Radhhanand Sangeet Vidyalaya">
+    <meta name="description" content="Tabla & Music Academy Management System for Radhhanand Sangeet Vidyalaya">
+    
+    <!-- Manifest & App Icons -->
+    <link rel="manifest" href="{% url 'manifest_json' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'academy/icons/icon-192x192.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'academy/icons/icon-192x192.png' %}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom TAAL Theme -->
+    <link rel="stylesheet" href="{% static 'academy/css/taal.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        {% if user.is_authenticated %}
+        <aside class="app-sidebar no-print" id="appSidebar">
+            <div class="sidebar-header d-flex justify-content-between align-items-center">
+                <a href="{% url 'dashboard' %}" class="brand-badge text-decoration-none">
+                    <div class="brand-icon">
+                        <i class="bi bi-disc"></i>
+                    </div>
+                    <div>
+                        <div class="brand-title" style="font-size: 14px; font-weight: 700; letter-spacing: 0.5px;">Radhhanand Sangeet Vidyalaya</div>
+                        <div class="brand-subtitle" style="font-size: 11px; color: #C69214;">Tabla & Music Academy</div>
+                    </div>
+                </a>
+                <button class="btn btn-sm text-white d-lg-none p-1" id="sidebarCloseBtn" type="button" aria-label="Close menu">
+                    <i class="bi bi-x-lg fs-5"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Core Management</div>
+                <a href="{% url 'dashboard' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-grid-1x2"></i> Dashboard</span>
+                </a>
+                <a href="{% url 'student_list' %}" class="nav-link-custom {% if 'student' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-people"></i> Students</span>
+                </a>
+                <a href="{% url 'batch_list' %}" class="nav-link-custom {% if 'batch' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-diagram-3"></i> Batches</span>
+                </a>
+                <a href="{% url 'session_list' %}" class="nav-link-custom {% if 'session' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-calendar3"></i> Class Schedule</span>
+                </a>
+                <a href="{% url 'attendance_hub' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'attendance_hub' or request.resolver_match.url_name == 'attendance_mark' %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-check2-square"></i> Attendance</span>
+                </a>
+                <a href="{% url 'attendance_history' %}" class="nav-link-custom {% if request.resolver_match.url_name == 'attendance_history' or request.resolver_match.url_name == 'attendance_audit_list' %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-clock-history"></i> Attendance History</span>
+                </a>
+
+                <div class="nav-section-title">Finance & Messaging</div>
+                <a href="{% url 'fee_dashboard' %}" class="nav-link-custom {% if 'fee' in request.resolver_match.url_name or 'payment' in request.resolver_match.url_name or 'receipt' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-cash-coin text-warning"></i> Fees & Payments</span>
+                </a>
+                <a href="{% url 'attendance_reports' %}" class="nav-link-custom {% if 'report' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-bar-chart-line text-info"></i> Academy Reports</span>
+                </a>
+                <a href="{% url 'whatsapp_hub' %}" class="nav-link-custom {% if 'whatsapp' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-whatsapp text-success"></i> WhatsApp Center</span>
+                </a>
+
+                <div class="nav-section-title">Musical Curriculum</div>
+                <a href="{% url 'lesson_list' %}" class="nav-link-custom {% if 'lesson' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-journal-bookmark"></i> Lessons Diary</span>
+                </a>
+                <a href="{% url 'assignment_list' %}" class="nav-link-custom {% if 'assignment' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-card-checklist"></i> Practice Tasks</span>
+                </a>
+                <a href="{% url 'taal_list' %}" class="nav-link-custom {% if 'library' in request.resolver_match.url_name or 'taal' in request.resolver_match.url_name or 'composition' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-music-note-beamed"></i> Bol & Taal Library</span>
+                </a>
+                <a href="{% url 'progress_list' %}" class="nav-link-custom {% if 'progress' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-graph-up-arrow"></i> Student Progress</span>
+                </a>
+                <a href="{% url 'performance_list' %}" class="nav-link-custom {% if 'performance' in request.resolver_match.url_name or 'exam' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-trophy"></i> Recitals & Exams</span>
+                </a>
+
+                <div class="nav-section-title">Administration</div>
+                <a href="{% url 'alert_list' %}" class="nav-link-custom {% if 'alert' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-bell"></i> Notifications</span>
+                    {% if unread_alerts_count > 0 %}
+                    <span class="badge-counter">{{ unread_alerts_count }}</span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'backup_hub' %}" class="nav-link-custom {% if 'backup' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-database-check"></i> Database Backups</span>
+                </a>
+                <a href="{% url 'settings' %}" class="nav-link-custom {% if 'settings' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-left"><i class="bi bi-gear"></i> Settings</span>
+                </a>
+                <a href="{% url 'logout' %}" class="nav-link-custom text-danger">
+                    <span class="nav-left"><i class="bi bi-box-arrow-right"></i> Logout</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div><i class="bi bi-person-circle me-1"></i> {{ user.get_full_name|default:user.username }}</div>
+                <small class="text-secondary">v1.2</small>
+            </div>
+        </aside>
+
+        <!-- Mobile Drawer Backdrop Overlay -->
+        <div class="sidebar-backdrop d-lg-none" id="sidebarBackdrop"></div>
+        {% endif %}
+
+        <!-- Main Content Container -->
+        <div class="app-main">
+            {% if user.is_authenticated %}
+            <!-- Top Navigation Bar -->
+            <header class="app-topbar no-print">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-sm btn-taal-outline d-lg-none" id="sidebarToggleBtn" type="button" aria-label="Open navigation menu">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                    <div class="topbar-title-area">
+                        <h2>{% block page_title %}{{ academy_settings.academy_name }}{% endblock %}</h2>
+                        <p class="d-none d-sm-block">{{ academy_settings.tagline }}</p>
+                    </div>
+                </div>
+
+                <div class="topbar-actions">
+                    <a href="{% url 'attendance_hub' %}" class="btn btn-sm btn-taal-primary d-none d-sm-inline-flex align-items-center gap-1">
+                        <i class="bi bi-check2-circle"></i> Mark Attendance
+                    </a>
+                    <a href="{% url 'alert_list' %}" class="btn btn-sm btn-taal-outline position-relative" aria-label="Alerts">
+                        <i class="bi bi-bell"></i>
+                        {% if unread_alerts_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                        {% endif %}
+                    </a>
+                    <div class="d-flex align-items-center gap-2 ps-2 border-start">
+                        <div class="text-end d-none d-md-block">
+                            <div class="small fw-semibold text-dark">{{ academy_settings.teacher_name }}</div>
+                            <div class="text-muted" style="font-size: 11px;">Primary Teacher</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            {% endif %}
+
+            <!-- Dynamic Messages / Alerts -->
+            <div class="container-fluid px-3 px-sm-4 pt-3 no-print">
+                {% if messages %}
+                <div class="messages-area mb-2">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show d-flex align-items-center gap-2 py-2" role="alert">
+                        {% if message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        {% elif message.tags == 'error' or message.tags == 'danger' %}
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>
+                        {% else %}
+                        <i class="bi bi-info-circle-fill text-info fs-5"></i>
+                        {% endif %}
+                        <div class="flex-grow-1">{{ message }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Page Body -->
+            <main class="page-content">
+                {% block content %}{% endblock %}
+            </main>
+
+            <!-- Footer -->
+            <footer class="text-center py-3 text-muted border-top bg-white mt-auto no-print" style="font-size: 12px;">
+                <div class="container">
+                    &copy; {{ current_year }} <strong>{{ academy_settings.academy_name }}</strong> &mdash; <em>Every Beat. Every Lesson. Every Milestone.</em>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <!-- Mobile Bottom Navigation Bar (Android Phone Touch Navigation) -->
+    <nav class="mobile-bottom-nav d-md-none no-print" aria-label="Mobile Bottom Navigation">
+        <a href="{% url 'dashboard' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <i class="bi bi-grid-1x2"></i>
+            <span>Home</span>
+        </a>
+        <a href="{% url 'student_list' %}" class="mobile-nav-item {% if 'student' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-people"></i>
+            <span>Students</span>
+        </a>
+        <a href="{% url 'batch_list' %}" class="mobile-nav-item {% if 'batch' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-diagram-3"></i>
+            <span>Batches</span>
+        </a>
+        <a href="{% url 'session_list' %}" class="mobile-nav-item {% if 'session' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-calendar3"></i>
+            <span>Schedule</span>
+        </a>
+        <a href="{% url 'attendance_hub' %}" class="mobile-nav-item {% if 'attendance' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-check2-square"></i>
+            <span>Attend</span>
+        </a>
+        <a href="{% url 'fee_dashboard' %}" class="mobile-nav-item {% if 'fee' in request.resolver_match.url_name or 'payment' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-cash-coin"></i>
+            <span>Fees</span>
+        </a>
+        <button type="button" class="mobile-nav-item border-0 bg-transparent" id="mobileMenuOpenBtn" aria-label="Open Full Menu">
+            <i class="bi bi-list fs-5"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+    {% endif %}
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <!-- Custom TAAL Script -->
+    <script src="{% static 'academy/js/taal.js' %}"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                    .then(function(reg) {
+                        console.log('PWA ServiceWorker registered with scope:', reg.scope);
+                    })
+                    .catch(function(err) {
+                        console.warn('PWA ServiceWorker registration failed:', err);
+                    });
+            });
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Bol & Taal Library — TAAL{% endblock %}
+{% block page_title %}Bol & Taal Reference Library{% endblock %}
+
+{% block content %}
+<div class="taal-card mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-disc text-warning"></i> Classical Taals (Rhythmic Cycles)</h3>
+            <p class="text-muted small mb-0">Hindustani classical rhythmic cycles, matra divisions, tali/khali maps, and thekas.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'composition_list' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-music-note-list"></i> Compositions Library
+            </a>
+            <a href="{% url 'taal_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Add New Taal
+            </a>
+        </div>
+    </div>
+
+    <!-- Taals Grid -->
+    <div class="row g-4">
+        {% for t in taals %}
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 border shadow-sm rounded-3">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <h5 class="fw-bold mb-0 brand-font">
+                            <a href="{% url 'taal_detail' t.id %}" class="text-dark text-decoration-none">{{ t.name }}</a>
+                        </h5>
+                        <small class="text-muted">{{ t.get_level_display }}</small>
+                    </div>
+                    <span class="badge bg-warning-subtle text-warning border px-2 py-1 fs-6">{{ t.matras }} Matras</span>
+                </div>
+                <div class="card-body">
+                    <div class="small mb-2">
+                        <strong class="text-muted">Vibhag:</strong> {{ t.vibhag_structure }}
+                    </div>
+                    <div class="small mb-3">
+                        <strong class="text-muted">Tali / Khali:</strong> {{ t.tali_khali_info }}
+                    </div>
+
+                    <div class="small fw-semibold text-muted text-uppercase mb-1" style="font-size: 11px;">Theka Notation:</div>
+                    <div class="bol-notation-box small py-2 px-3 m-0" style="font-size: 12px;">
+                        {{ t.theka_notation }}
+                    </div>
+
+                    <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center small text-muted">
+                        <span><i class="bi bi-collection me-1"></i> {{ t.compositions.count }} Compositions</span>
+                        <a href="{% url 'taal_detail' t.id %}" class="text-decoration-none">Explore &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

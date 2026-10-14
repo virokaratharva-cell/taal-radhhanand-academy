@@ -1,0 +1,230 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Attendance Reports — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Attendance Analytics & Reports{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-bar-chart-line text-warning"></i> Attendance Analytics</h3>
+            <p class="text-muted small mb-0">Period: <strong>{{ data.start_date|date:"d M Y" }}</strong> to <strong>{{ data.end_date|date:"d M Y" }}</strong> &bull; Radhhanand Sangeet Vidyalaya</p>
+        </div>
+        <div class="d-flex gap-2 no-print">
+            <a href="{% url 'reports_attendance' %}" class="btn btn-taal-primary btn-sm">Attendance</a>
+            <a href="{% url 'fees_reports' %}" class="btn btn-taal-outline btn-sm">Fee Reports</a>
+            <a href="{% url 'timetable_reports' %}" class="btn btn-taal-outline btn-sm">Timetable Reports</a>
+            <a href="{% url 'export_monthly_attendance_csv' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-download"></i> Export CSV
+            </a>
+            <button onclick="window.print();" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-printer"></i> Print
+            </button>
+        </div>
+    </div>
+
+    <!-- Date Range & Batch Filter Toolbar -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border no-print">
+        <div class="col-12 col-md-4">
+            <label class="form-label small fw-semibold text-muted">Select Batch</label>
+            <select name="batch" class="form-select form-select-sm">
+                <option value="">-- All Batches --</option>
+                {% for b in batches %}
+                <option value="{{ b.id }}" {% if selected_batch_id == b.id|stringformat:"i" %}selected{% endif %}>{{ b.name }} ({{ b.course }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small fw-semibold text-muted">From Date</label>
+            <input type="date" name="start_date" value="{{ data.start_date|date:'Y-m-d' }}" class="form-control form-control-sm">
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small fw-semibold text-muted">To Date</label>
+            <input type="date" name="end_date" value="{{ data.end_date|date:'Y-m-d' }}" class="form-control form-control-sm">
+        </div>
+        <div class="col-12 col-md-2 d-flex align-items-end gap-1">
+            <button type="submit" class="btn btn-sm btn-taal-primary w-100 py-1">Apply Filter</button>
+            {% if selected_batch_id %}
+            <a href="{% url 'reports_attendance' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Summary KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="p-3 bg-light rounded border text-center">
+                <div class="fs-4 fw-bold text-dark">{{ data.total_conducted }}</div>
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">Conducted Classes</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="p-3 bg-light rounded border text-center">
+                <div class="fs-4 fw-bold text-success">{{ data.total_present }}</div>
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">Total Presences</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="p-3 bg-light rounded border text-center">
+                <div class="fs-4 fw-bold text-danger">{{ data.total_absent }}</div>
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">Total Absences</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="p-3 bg-light rounded border text-center">
+                <div class="fs-4 fw-bold {% if data.overall_pct >= 75 %}text-success{% else %}text-warning-emphasis{% endif %}">
+                    {{ data.overall_pct }}%
+                </div>
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">Overall Attendance Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student-wise Attendance Register -->
+    <div class="mb-4">
+        <h5 class="fw-bold mb-3 brand-font">Student Attendance Register</h5>
+        {% if data.student_rows %}
+        <div class="taal-table-responsive">
+            <table class="taal-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th class="text-center">Eligible Conducted</th>
+                        <th class="text-center text-success">Present</th>
+                        <th class="text-center text-danger">Absent</th>
+                        <th class="text-center text-warning">Leave</th>
+                        <th class="text-center">Attendance %</th>
+                        <th class="text-end no-print">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data.student_rows %}
+                    <tr>
+                        <td><span class="badge bg-light text-dark font-monospace border">{{ row.student.student_id }}</span></td>
+                        <td><strong><a href="{% url 'student_detail' row.student.id %}" class="text-decoration-none text-dark">{{ row.student.full_name }}</a></strong></td>
+                        <td class="text-center fw-bold">{{ row.eligible_count }}</td>
+                        <td class="text-center fw-bold text-success">{{ row.present_count }}</td>
+                        <td class="text-center fw-bold text-danger">{{ row.absent_count }}</td>
+                        <td class="text-center fw-bold text-warning">{{ row.leave_count }}</td>
+                        <td class="text-center">
+                            {% if row.percentage is not None %}
+                                {% if row.percentage >= data.threshold %}
+                                <span class="badge bg-success-subtle text-success border px-2 py-1">{{ row.percentage }}%</span>
+                                {% else %}
+                                <span class="badge bg-danger-subtle text-danger border px-2 py-1" title="Below threshold of {{ data.threshold }}%">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ row.percentage }}%
+                                </span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted small">No eligible classes</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end no-print">
+                            <a href="{% url 'student_detail' row.student.id %}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">
+                                Profile
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted small">No active students found.</p>
+        {% endif %}
+    </div>
+
+    <!-- Batch-wise Attendance Breakdown -->
+    <div class="mb-4">
+        <h5 class="fw-bold mb-3 brand-font">Batch Performance Breakdown</h5>
+        {% if data.batch_rows %}
+        <div class="taal-table-responsive">
+            <table class="taal-table">
+                <thead>
+                    <tr>
+                        <th>Batch Name</th>
+                        <th>Course</th>
+                        <th class="text-center">Classes Conducted</th>
+                        <th class="text-center">Present Slots</th>
+                        <th class="text-center">Total Slots</th>
+                        <th class="text-center">Attendance %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data.batch_rows %}
+                    <tr>
+                        <td><strong><a href="{% url 'batch_detail' row.batch.id %}" class="text-decoration-none text-dark">{{ row.batch.name }}</a></strong></td>
+                        <td><span class="badge bg-taal-primary">{{ row.batch.course }}</span></td>
+                        <td class="text-center">{{ row.sessions_count }}</td>
+                        <td class="text-center text-success fw-semibold">{{ row.present_count }}</td>
+                        <td class="text-center">{{ row.total_slots }}</td>
+                        <td class="text-center">
+                            {% if row.percentage is not None %}
+                            <span class="badge {% if row.percentage >= 75 %}bg-success-subtle text-success{% else %}bg-warning-subtle text-warning-emphasis{% endif %} border">
+                                {{ row.percentage }}%
+                            </span>
+                            {% else %}
+                            <span class="text-muted small">No sessions</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted small">No batch attendance records found for this period.</p>
+        {% endif %}
+    </div>
+
+    <!-- Low Attendance Watchlist -->
+    <div>
+        <h5 class="fw-bold mb-2 brand-font text-danger"><i class="bi bi-exclamation-triangle"></i> Low Attendance Watchlist</h5>
+        <p class="small text-muted mb-3">Students falling below academy attendance threshold during this period.</p>
+
+        {% if data.low_attendance_students %}
+        <div class="taal-table-responsive">
+            <table class="taal-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th class="text-center">Conducted Classes</th>
+                        <th class="text-center text-success">Present</th>
+                        <th class="text-center text-danger">Absent</th>
+                        <th class="text-center">Attendance %</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for st in data.low_attendance_students %}
+                    <tr>
+                        <td><span class="badge bg-light text-dark font-monospace border">{{ st.student.student_id }}</span></td>
+                        <td><strong><a href="{% url 'student_detail' st.student.id %}" class="text-decoration-none text-dark">{{ st.student.full_name }}</a></strong></td>
+                        <td class="text-center">{{ st.eligible_count }}</td>
+                        <td class="text-center text-success fw-bold">{{ st.present_count }}</td>
+                        <td class="text-center text-danger fw-bold">{{ st.absent_count }}</td>
+                        <td class="text-center">
+                            <span class="badge bg-danger-subtle text-danger border">
+                                {{ st.percentage }}%
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'student_detail' st.student.id %}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">
+                                View Profile
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-3 bg-light rounded border text-muted small">
+            <i class="bi bi-check-circle-fill text-success me-1"></i> Excellent! All active students maintain attendance above the academy benchmark for this date range.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

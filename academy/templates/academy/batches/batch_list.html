@@ -1,0 +1,136 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Batches — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Batch Management{% endblock %}
+
+{% block content %}
+<div class="taal-card mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-diagram-3 text-warning"></i> Academy Batches</h3>
+            <p class="text-muted small mb-0">Manage training groups, recurring timetables, batch capacities, and fee structures for Radhhanand Sangeet Vidyalaya.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'session_list' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-calendar3"></i> View Timetable
+            </a>
+            <a href="{% url 'batch_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Create New Batch
+            </a>
+        </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="bg-light p-3 rounded-3 border mb-4">
+        <form method="GET" action="{% url 'batch_list' %}" class="row g-2 align-items-center">
+            <div class="col-12 col-md-5">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search batch name, ID, course, or teacher...">
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <select name="day" class="form-select form-select-sm">
+                    <option value="">-- All Weekdays --</option>
+                    {% for day in day_choices %}
+                    <option value="{{ day }}" {% if day_filter|lower == day|lower %}selected{% endif %}>{{ day }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active Batches</option>
+                    <option value="archived" {% if status_filter == 'archived' %}selected{% endif %}>Archived Batches</option>
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Batches</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-taal-primary flex-grow-1">Filter</button>
+                {% if query or day_filter or status_filter != 'active' %}
+                <a href="{% url 'batch_list' %}" class="btn btn-sm btn-outline-secondary" title="Reset Filters"><i class="bi bi-x-lg"></i></a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    {% if batches %}
+    <div class="row g-4">
+        {% for b in batches %}
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 border shadow-sm rounded-3 {% if b.is_archived %}opacity-75 border-secondary{% endif %}">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <span class="badge bg-light text-dark font-monospace border">{{ b.batch_id }}</span>
+                        <h5 class="fw-bold mb-0 mt-1"><a href="{% url 'batch_detail' b.id %}" class="text-decoration-none text-dark">{{ b.name }}</a></h5>
+                    </div>
+                    <div>
+                        {% if b.is_archived %}
+                        <span class="badge bg-secondary">Archived</span>
+                        {% elif b.is_active %}
+                        <span class="badge-status active">Active</span>
+                        {% else %}
+                        <span class="badge-status discontinued">Inactive</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-taal-primary">{{ b.course }}</span>
+                        <span class="fw-semibold text-success small">₹{{ b.monthly_fee }}/month</span>
+                    </div>
+
+                    <p class="text-secondary small mb-3">{{ b.description|default:"Standard curriculum batch at Radhhanand Sangeet Vidyalaya."|truncatewords:20 }}</p>
+
+                    <div class="d-flex align-items-center gap-2 mb-2 small">
+                        <i class="bi bi-calendar-day text-warning"></i>
+                        <span><strong>{{ b.regular_day }}</strong> &bull; {{ b.start_time|time:"g:i A" }} &ndash; {{ b.end_time|time:"g:i A" }}</span>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 mb-3 small">
+                        <i class="bi bi-mortarboard text-secondary"></i>
+                        <span>{{ b.get_level_display }} &bull; Guru: {{ b.teacher_name|default:academy_settings.teacher_name }}</span>
+                    </div>
+
+                    <div class="p-2 bg-light rounded d-flex justify-content-between align-items-center small">
+                        <span class="text-muted"><i class="bi bi-people me-1"></i> Enrolled:</span>
+                        <span class="fw-bold fs-6">{{ b.active_students_count }} / {{ b.capacity }}</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top d-flex flex-wrap justify-content-between align-items-center gap-2 py-2">
+                    <div class="d-flex gap-1">
+                        <a href="{% url 'batch_detail' b.id %}" class="btn btn-sm btn-taal-outline py-1 px-2" title="View Batch Details">
+                            <i class="bi bi-eye"></i> View
+                        </a>
+                        <a href="{% url 'batch_edit' b.id %}" class="btn btn-sm btn-outline-secondary py-1 px-2" title="Edit Batch">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <a href="{% url 'session_create' %}?batch={{ b.id }}" class="btn btn-sm btn-taal-primary py-1 px-2" title="Schedule Class">
+                            <i class="bi bi-calendar-plus"></i> Class
+                        </a>
+                        <a href="{% url 'batch_delete' b.id %}" class="btn btn-sm btn-outline-danger py-1 px-2" title="Delete Batch">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-diagram-3"></i></div>
+        <div class="empty-state-title">No Batches Found</div>
+        <div class="empty-state-text">
+            {% if query or day_filter or status_filter != 'active' %}
+            No batches match your filter criteria. <a href="{% url 'batch_list' %}">Reset filters</a> to view all batches.
+            {% else %}
+            Create your first tabla batch (e.g., Tuesday Batch 1 or Saturday Riyaz) to start scheduling classes.
+            {% endif %}
+        </div>
+        <a href="{% url 'batch_create' %}" class="btn btn-taal-primary"><i class="bi bi-plus-circle"></i> Create Batch</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

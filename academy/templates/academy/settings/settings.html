@@ -1,0 +1,125 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Academy Settings — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Academy Settings & Configuration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="taal-card">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h3 class="taal-card-title mb-0"><i class="bi bi-gear text-warning"></i> Academy Settings</h3>
+                <span class="text-muted small">Global Configuration</span>
+            </div>
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                    {% for error in form.non_field_errors %}
+                    <div><i class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <h5 class="fw-bold mb-3 brand-font" style="font-size: 16px;">Identity & Branding</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Academy Name *</label>
+                        {{ form.academy_name }}
+                        {% if form.academy_name.errors %}<div class="text-danger small mt-1">{{ form.academy_name.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Primary Teacher / Guru Display Name *</label>
+                        {{ form.teacher_name }}
+                        {% if form.teacher_name.errors %}<div class="text-danger small mt-1">{{ form.teacher_name.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Academy Tagline</label>
+                    {{ form.tagline }}
+                    {% if form.tagline.errors %}<div class="text-danger small mt-1">{{ form.tagline.errors.0 }}</div>{% endif %}
+                </div>
+
+                <h5 class="fw-bold mb-3 pt-3 border-top brand-font" style="font-size: 16px;">Official Contact Details (For Receipts & Messages)</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Contact Phone</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}<div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Official Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold text-success"><i class="bi bi-whatsapp"></i> Academy WhatsApp</label>
+                        {{ form.whatsapp_number }}
+                        {% if form.whatsapp_number.errors %}<div class="text-danger small mt-1">{{ form.whatsapp_number.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Academy Campus Address</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}<div class="text-danger small mt-1">{{ form.address.errors.0 }}</div>{% endif %}
+                </div>
+
+                <h5 class="fw-bold mb-3 pt-3 border-top brand-font" style="font-size: 16px;">Attendance Policies & Alert Benchmarks</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Attendance Alert Threshold (%) *</label>
+                        {{ form.attendance_threshold }}
+                        <small class="text-muted d-block">Students falling below this percentage trigger warning alerts.</small>
+                        {% if form.attendance_threshold.errors %}<div class="text-danger small mt-1">{{ form.attendance_threshold.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Consecutive Absence Threshold *</label>
+                        {{ form.consecutive_absence_threshold }}
+                        <small class="text-muted d-block">Number of continuous missed conducted classes triggering follow-up alerts.</small>
+                        {% if form.consecutive_absence_threshold.errors %}<div class="text-danger small mt-1">{{ form.consecutive_absence_threshold.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Currency Symbol *</label>
+                        {{ form.currency_symbol }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Date Format</label>
+                        {{ form.date_format }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Default Class Duration (Mins)</label>
+                        {{ form.default_class_duration }}
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mb-3 pt-3 border-top brand-font" style="font-size: 16px;">Module Toggles</h5>
+                <div class="p-3 bg-light rounded-3 border mb-4">
+                    <div class="form-check mb-2">
+                        {{ form.enable_fees }}
+                        <label class="form-check-label small fw-semibold" for="id_enable_fees">Enable Fee & Tuition Management Module</label>
+                        <small class="text-muted d-block">When unchecked, the Fees module is hidden from the navigation.</small>
+                    </div>
+
+                    <div class="form-check">
+                        {{ form.enable_late_status }}
+                        <label class="form-check-label small fw-semibold" for="id_enable_late_status">Enable 'Late' Status in Attendance Marking</label>
+                        <small class="text-muted d-block">Adds 'Late' as an optional status alongside Present, Absent, and Leave.</small>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-taal-primary px-4"><i class="bi bi-check-lg"></i> Save Academy Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

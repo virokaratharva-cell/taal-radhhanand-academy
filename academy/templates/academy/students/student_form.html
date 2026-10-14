@@ -1,0 +1,134 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}{{ title }} — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="taal-card">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h3 class="taal-card-title mb-0"><i class="bi bi-person-badge text-warning"></i> {{ title }}</h3>
+                <a href="{% url 'student_list' %}" class="btn btn-sm btn-taal-outline"><i class="bi bi-arrow-left"></i> Back to Students</a>
+            </div>
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                    {% for error in form.non_field_errors %}
+                    <div><i class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Student Identity -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">First Name *</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}<div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Last Name *</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}<div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Learning Level *</label>
+                        {{ form.level }}
+                        {% if form.level.errors %}<div class="text-danger small mt-1">{{ form.level.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Student Status *</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}<div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Monthly Tuition Fee (₹)</label>
+                        {{ form.monthly_fee }}
+                        {% if form.monthly_fee.errors %}<div class="text-danger small mt-1">{{ form.monthly_fee.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Admission / Enrollment Date *</label>
+                        {{ form.enrollment_date }}
+                        {% if form.enrollment_date.errors %}<div class="text-danger small mt-1">{{ form.enrollment_date.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Date of Birth (Optional)</label>
+                        {{ form.date_of_birth }}
+                        {% if form.date_of_birth.errors %}<div class="text-danger small mt-1">{{ form.date_of_birth.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                {% if form.initial_batch %}
+                <div class="mb-3 p-3 bg-light rounded-3 border">
+                    <label class="form-label small fw-semibold text-primary"><i class="bi bi-diagram-3"></i> Assign to Batch Immediately</label>
+                    {{ form.initial_batch }}
+                    <small class="text-muted d-block mt-1">{{ form.initial_batch.help_text }}</small>
+                </div>
+                {% endif %}
+
+                <!-- Contact & Guardian -->
+                <h5 class="fw-bold mt-4 mb-3 pt-3 border-top brand-font" style="font-size: 16px;">Contact & Guardian Information</h5>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Student Phone Number</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}<div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Email Address</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Parent / Guardian Name</label>
+                        {{ form.guardian_name }}
+                        {% if form.guardian_name.errors %}<div class="text-danger small mt-1">{{ form.guardian_name.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Guardian Phone Number</label>
+                        {{ form.guardian_phone }}
+                        {% if form.guardian_phone.errors %}<div class="text-danger small mt-1">{{ form.guardian_phone.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold text-success"><i class="bi bi-whatsapp"></i> Guardian WhatsApp</label>
+                        {{ form.guardian_whatsapp }}
+                        <div class="form-text small">Used for reminders & chatbot</div>
+                        {% if form.guardian_whatsapp.errors %}<div class="text-danger small mt-1">{{ form.guardian_whatsapp.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Residential Address</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}<div class="text-danger small mt-1">{{ form.address.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Teacher Notes / Musical Background</label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}<div class="text-danger small mt-1">{{ form.notes.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a href="{% url 'student_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-taal-primary px-4"><i class="bi bi-check-lg"></i> Save Student Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

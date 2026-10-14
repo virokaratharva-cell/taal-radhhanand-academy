@@ -1,0 +1,60 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Academy Alerts & Reminders — TAAL{% endblock %}
+{% block page_title %}Internal Alerts & Reminders{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-bell text-warning"></i> Operational Reminders & Alerts</h3>
+            <p class="text-muted small mb-0">Automated system checks for unrecorded attendance, consecutive absences, and due assignments.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-sm btn-taal-outline"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+    </div>
+
+    {% if alerts %}
+    <div class="list-group list-group-flush">
+        {% for a in alerts %}
+        <div class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center {% if a.is_dismissed %}opacity-50{% endif %}">
+            <div class="d-flex align-items-start gap-3">
+                <div class="fs-4">
+                    {% if a.severity == 'danger' %}
+                    <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                    {% elif a.severity == 'warning' %}
+                    <i class="bi bi-exclamation-circle-fill text-warning"></i>
+                    {% else %}
+                    <i class="bi bi-info-circle-fill text-info"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1 fs-6">{{ a.title }}</h5>
+                    <p class="text-secondary small mb-1">{{ a.message }}</p>
+                    <small class="text-muted">{{ a.created_at|timesince }} ago &bull; <span class="badge bg-light text-dark border">{{ a.get_alert_type_display }}</span></small>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                {% if a.link and not a.is_dismissed %}
+                <a href="{{ a.link }}" class="btn btn-sm btn-taal-primary py-1 px-3" style="font-size: 12px;">Resolve</a>
+                {% endif %}
+                {% if not a.is_dismissed %}
+                <a href="{% url 'alert_dismiss' a.id %}" class="btn btn-sm btn-outline-secondary py-1 px-2" style="font-size: 12px;" title="Dismiss">
+                    <i class="bi bi-check2"></i> Dismiss
+                </a>
+                {% else %}
+                <span class="badge bg-secondary-subtle text-secondary">Dismissed</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-check2-circle text-success"></i></div>
+        <div class="empty-state-title">All Systems Clear!</div>
+        <div class="empty-state-text">There are no pending alerts or student attendance warnings at this time.</div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

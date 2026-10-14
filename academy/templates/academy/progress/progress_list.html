@@ -1,0 +1,122 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Student Progress — TAAL{% endblock %}
+{% block page_title %}Student Musical Progress & Milestones{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-graph-up-arrow text-warning"></i> Musical Progress Milestones</h3>
+            <p class="text-muted small mb-0">Track student development, repertoire memorized, tempo milestones, and focus areas.</p>
+        </div>
+        <div>
+            <a href="{% url 'progress_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Log Progress Milestone
+            </a>
+        </div>
+    </div>
+
+    <!-- Student Filter -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border">
+        <div class="col-12 col-md-6">
+            <select name="student" class="form-select form-select-sm">
+                <option value="">-- All Students --</option>
+                {% for st in students %}
+                <option value="{{ st.id }}" {% if selected_student_id == st.id|stringformat:"i" %}selected{% endif %}>{{ st.full_name }} ({{ st.student_id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-dark w-100">Filter</button>
+            {% if selected_student_id %}
+            <a href="{% url 'progress_list' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filter"><i class="bi bi-x-circle"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Progress Cards List -->
+    {% if page_obj.object_list %}
+    <div class="list-group list-group-flush">
+        {% for pr in page_obj.object_list %}
+        <div class="list-group-item px-0 py-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="fw-bold mb-0">
+                        <a href="{% url 'student_detail' pr.student.id %}">{{ pr.student.full_name }}</a>
+                    </h5>
+                    <small class="text-muted">{{ pr.student.student_id }} &bull; Level: {{ pr.get_current_level_display|default:pr.current_level|title }}</small>
+                </div>
+                <span class="badge bg-light text-dark border">{{ pr.date|date:"D, d M Y" }}</span>
+            </div>
+
+            <div class="row g-2 small mt-1">
+                {% if pr.taals_studied %}
+                <div class="col-12 col-md-6">
+                    <strong class="text-muted">Taals Practiced:</strong> {{ pr.taals_studied }}
+                </div>
+                {% endif %}
+                {% if pr.compositions_studied %}
+                <div class="col-12 col-md-6">
+                    <strong class="text-muted">Compositions Memorized:</strong> {{ pr.compositions_studied }}
+                </div>
+                {% endif %}
+                {% if pr.topics_completed %}
+                <div class="col-12 col-md-6 text-success">
+                    <strong>Mastered / Completed:</strong> {{ pr.topics_completed }}
+                </div>
+                {% endif %}
+                {% if pr.topics_needing_revision %}
+                <div class="col-12 col-md-6 text-danger">
+                    <strong>Needs Focus / Revision:</strong> {{ pr.topics_needing_revision }}
+                </div>
+                {% endif %}
+                {% if pr.tempo_targets %}
+                <div class="col-12 col-md-6">
+                    <strong class="text-muted">Tempo Targets:</strong> {{ pr.tempo_targets }}
+                </div>
+                {% endif %}
+                {% if pr.next_goal %}
+                <div class="col-12 col-md-6 text-primary">
+                    <strong>Next Musical Goal:</strong> {{ pr.next_goal }}
+                </div>
+                {% endif %}
+            </div>
+
+            {% if pr.feedback %}
+            <div class="small text-secondary mt-2 p-2 bg-light rounded">
+                <strong>Teacher Feedback:</strong> {{ pr.feedback }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-3 pt-3">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} milestones</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&student={{ selected_student_id }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&student={{ selected_student_id }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-graph-up-arrow"></i></div>
+        <div class="empty-state-title">No Progress Records Logged</div>
+        <div class="empty-state-text">Record milestones after student assessments, examinations, or notable practice achievements.</div>
+        <a href="{% url 'progress_create' %}" class="btn btn-taal-primary"><i class="bi bi-plus-lg"></i> Log First Milestone</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

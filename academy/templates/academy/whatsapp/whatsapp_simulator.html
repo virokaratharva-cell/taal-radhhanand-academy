@@ -1,0 +1,89 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Chatbot Simulator — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}WhatsApp Chatbot Simulator{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="taal-card">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h3 class="taal-card-title mb-1"><i class="bi bi-chat-dots text-success"></i> Parent WhatsApp Chatbot Simulator</h3>
+                    <p class="text-muted small mb-0">Test parent queries (today's class, next class, fee dues, academy contact) with privacy protection.</p>
+                </div>
+                <a href="{% url 'whatsapp_hub' %}" class="btn btn-sm btn-taal-outline">
+                    <i class="bi bi-arrow-left"></i> Back to Hub
+                </a>
+            </div>
+
+            <!-- Parent Sample Numbers Helper -->
+            <div class="p-3 bg-light rounded border mb-4">
+                <div class="fw-semibold small text-muted text-uppercase mb-2">Registered Students & Guardian Numbers for Testing:</div>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for st in sample_students %}
+                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                            onclick="document.getElementById('id_phone').value='{{ st.guardian_whatsapp|default:st.phone }}';">
+                        <strong>{{ st.full_name }}</strong>: {{ st.guardian_whatsapp|default:st.phone }}
+                    </button>
+                    {% empty %}
+                    <span class="small text-muted">No students currently registered.</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <form method="POST" class="mb-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Parent / Guardian WhatsApp Number *</label>
+                    <input type="text" id="id_phone" name="phone_number" value="{{ phone_number }}" class="form-control" placeholder="e.g. 9876543210" required>
+                    <div class="form-text small">Enter a registered phone number. Unknown numbers will receive a privacy-safe guidance prompt.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Incoming WhatsApp Message Query *</label>
+                    <textarea name="query_text" class="form-control" rows="3" required placeholder="Try: 'What time is today's class?' or 'Fee balance' or 'When is my next class?'">{{ query_text }}</textarea>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex gap-1 flex-wrap">
+                        <button type="button" class="btn btn-sm btn-light border" onclick="document.querySelector('textarea[name=query_text]').value='Today class';">Today's Class</button>
+                        <button type="button" class="btn btn-sm btn-light border" onclick="document.querySelector('textarea[name=query_text]').value='When is next class?';">Next Class</button>
+                        <button type="button" class="btn btn-sm btn-light border" onclick="document.querySelector('textarea[name=query_text]').value='Fee balance';">Fee Balance</button>
+                        <button type="button" class="btn btn-sm btn-light border" onclick="document.querySelector('textarea[name=query_text]').value='Academy contact';">Contact Info</button>
+                    </div>
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-send-fill"></i> Simulate Message
+                    </button>
+                </div>
+            </form>
+
+            <!-- Simulated WhatsApp Phone Screen -->
+            {% if response_text %}
+            <div class="mt-4 pt-3 border-top">
+                <h5 class="fw-bold mb-3 brand-font"><i class="bi bi-phone"></i> Automated WhatsApp Bot Response:</h5>
+                <div class="p-4 rounded-3 border" style="background: #E5DDD5; max-width: 550px; margin: 0 auto; box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);">
+                    <!-- Parent Outgoing Bubble -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="p-3 rounded-3 text-dark shadow-sm" style="background: #DCF8C6; max-width: 80%; border-radius: 12px 0 12px 12px;">
+                            <div class="small fw-semibold text-secondary mb-1">Parent ({{ phone_number }})</div>
+                            <div style="white-space: pre-wrap;">{{ query_text }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Bot Incoming Bubble -->
+                    <div class="d-flex justify-content-start">
+                        <div class="p-3 bg-white rounded-3 text-dark shadow-sm" style="max-width: 85%; border-radius: 0 12px 12px 12px;">
+                            <div class="small fw-semibold text-success mb-1">
+                                <i class="bi bi-disc"></i> Radhhanand Sangeet Vidyalaya Bot
+                            </div>
+                            <div style="white-space: pre-wrap; font-size: 0.95rem;">{{ response_text }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

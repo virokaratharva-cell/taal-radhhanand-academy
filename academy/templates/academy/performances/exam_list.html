@@ -1,0 +1,61 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Board & Academy Examinations — TAAL{% endblock %}
+{% block page_title %}Examinations Record{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-award text-warning"></i> Examination Records</h3>
+            <p class="text-muted small mb-0">Track Gandharva Mahavidyalaya, Pracheen Kala Kendra, or internal academy exams.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'performance_list' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-trophy"></i> Recitals
+            </a>
+            <a href="{% url 'exam_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Record Examination
+            </a>
+        </div>
+    </div>
+
+    {% if exams %}
+    <div class="taal-table-responsive">
+        <table class="taal-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Exam Name</th>
+                    <th>Board / Institution</th>
+                    <th>Result / Grade</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ex in exams %}
+                <tr>
+                    <td>{{ ex.exam_date|date:"d M Y" }}</td>
+                    <td><strong><a href="{% url 'student_detail' ex.student.id %}">{{ ex.student.full_name }}</a></strong></td>
+                    <td>{{ ex.exam_name }}</td>
+                    <td>{{ ex.exam_board|default:"Internal" }}</td>
+                    <td>
+                        <span class="badge bg-success-subtle text-success border">{{ ex.mock_result|default:"Passed" }}</span>
+                    </td>
+                    <td class="small text-muted">{{ ex.teacher_remarks|default:"--" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-award"></i></div>
+        <div class="empty-state-title">No Examination Records</div>
+        <div class="empty-state-text">Keep track of students appearing for Prarambhik, Praveshika, Madhyama, or Visharad exams.</div>
+        <a href="{% url 'exam_create' %}" class="btn btn-taal-primary"><i class="bi bi-plus-lg"></i> Record First Examination</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

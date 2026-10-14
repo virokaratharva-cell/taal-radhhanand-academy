@@ -1,0 +1,81 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Performances — TAAL{% endblock %}
+{% block page_title %}Recitals & Stage Performances{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-trophy text-warning"></i> Public Recitals & Performances</h3>
+            <p class="text-muted small mb-0">Record stage appearances, academy concerts, baithaks, and external presentations.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'exam_list' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-award"></i> Board Exams
+            </a>
+            <a href="{% url 'performance_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Record Performance
+            </a>
+        </div>
+    </div>
+
+    {% if performances %}
+    <div class="row g-3">
+        {% for p in performances %}
+        <div class="col-12 col-md-6">
+            <div class="card h-100 border shadow-sm rounded-3">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+                    <span class="badge bg-light text-dark border">{{ p.event_date|date:"D, d M Y" }}</span>
+                    {% if p.venue %}<span class="small text-muted"><i class="bi bi-geo-alt"></i> {{ p.venue }}</span>{% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="fw-bold mb-1">{{ p.event_name }}</h5>
+                    <div class="small text-muted mb-2">
+                        {% if p.student %}
+                        Performer: <strong><a href="{% url 'student_detail' p.student.id %}">{{ p.student.full_name }}</a></strong>
+                        {% elif p.batch %}
+                        Batch: <strong><a href="{% url 'batch_detail' p.batch.id %}">{{ p.batch.name }}</a></strong>
+                        {% endif %}
+                    </div>
+
+                    {% if p.composition_performed %}
+                    <div class="small mb-1">
+                        <strong>Compositions:</strong> {{ p.composition_performed }}
+                    </div>
+                    {% endif %}
+
+                    {% if p.taal %}
+                    <div class="small mb-2">
+                        <strong>Taal:</strong> {{ p.taal }}
+                    </div>
+                    {% endif %}
+
+                    {% if p.teacher_feedback %}
+                    <div class="small p-2 bg-light rounded text-secondary mt-2">
+                        <strong>Feedback:</strong> {{ p.teacher_feedback }}
+                    </div>
+                    {% endif %}
+
+                    {% if p.recording_url %}
+                    <div class="mt-2">
+                        <a href="{{ p.recording_url }}" target="_blank" class="small text-decoration-none">
+                            <i class="bi bi-play-circle"></i> View Recording &rarr;
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-trophy"></i></div>
+        <div class="empty-state-title">No Performance Records Yet</div>
+        <div class="empty-state-text">Record academy concerts, annual recitals, or student baithaks.</div>
+        <a href="{% url 'performance_create' %}" class="btn btn-taal-primary"><i class="bi bi-plus-lg"></i> Record First Performance</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

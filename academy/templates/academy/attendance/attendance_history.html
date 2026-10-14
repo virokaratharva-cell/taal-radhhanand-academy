@@ -1,0 +1,124 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Attendance History — TAAL{% endblock %}
+{% block page_title %}Attendance History Register{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-clock-history text-warning"></i> Attendance Register & Archives</h3>
+            <p class="text-muted small mb-0">Audit past attendance records, inspect remarks, or correct historical entries.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'export_attendance_csv' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-download"></i> Export Register CSV
+            </a>
+            <a href="{% url 'attendance_audit_list' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-journal-text"></i> Audit Trail
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border">
+        <div class="col-12 col-md-3">
+            <select name="batch" class="form-select form-select-sm">
+                <option value="">-- All Batches --</option>
+                {% for b in batches %}
+                <option value="{{ b.id }}" {% if batch_filter == b.id|stringformat:"i" %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 col-md-3">
+            <select name="student" class="form-select form-select-sm">
+                <option value="">-- All Students --</option>
+                {% for st in students %}
+                <option value="{{ st.id }}" {% if student_filter == st.id|stringformat:"i" %}selected{% endif %}>{{ st.full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="status" class="form-select form-select-sm">
+                <option value="">-- All Statuses --</option>
+                <option value="present" {% if status_filter == 'present' %}selected{% endif %}>Present</option>
+                <option value="absent" {% if status_filter == 'absent' %}selected{% endif %}>Absent</option>
+                <option value="leave" {% if status_filter == 'leave' %}selected{% endif %}>Leave</option>
+                <option value="late" {% if status_filter == 'late' %}selected{% endif %}>Late</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <input type="month" name="month" value="{{ month_filter }}" class="form-control form-control-sm" placeholder="Month">
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-dark w-100">Filter</button>
+            {% if batch_filter or student_filter or status_filter or month_filter %}
+            <a href="{% url 'attendance_history' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-circle"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Attendance Records Table -->
+    {% if page_obj.object_list %}
+    <div class="taal-table-responsive">
+        <table class="taal-table">
+            <thead>
+                <tr>
+                    <th>Class Date</th>
+                    <th>Batch</th>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th class="text-end">Correct / Review</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for att in page_obj.object_list %}
+                <tr>
+                    <td><strong>{{ att.session.date|date:"D, d M Y" }}</strong></td>
+                    <td>{{ att.session.batch.name }}</td>
+                    <td><span class="badge bg-light text-dark font-monospace border">{{ att.student.student_id }}</span></td>
+                    <td><a href="{% url 'student_detail' att.student.id %}"><strong>{{ att.student.full_name }}</strong></a></td>
+                    <td>
+                        <span class="badge-status {{ att.status }}">{{ att.get_status_display }}</span>
+                    </td>
+                    <td class="small text-muted">{{ att.remarks|default:"--" }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'attendance_mark' att.session.id %}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">
+                            <i class="bi bi-pencil-square"></i> Open Session
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} records</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&batch={{ batch_filter }}&student={{ student_filter }}&status={{ status_filter }}&month={{ month_filter }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&batch={{ batch_filter }}&student={{ student_filter }}&status={{ status_filter }}&month={{ month_filter }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-clock-history"></i></div>
+        <div class="empty-state-title">No Attendance Records Found</div>
+        <div class="empty-state-text">No attendance entries matched the selected filters.</div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

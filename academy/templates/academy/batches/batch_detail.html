@@ -1,0 +1,357 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}{{ batch.name }} — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Batch: {{ batch.name }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Left Column: Batch Details & Controls -->
+    <div class="col-12 col-lg-4">
+        <!-- Batch Details Card -->
+        <div class="taal-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-light text-dark font-monospace border fs-6">{{ batch.batch_id }}</span>
+                <div>
+                    {% if batch.is_archived %}
+                    <span class="badge bg-secondary">Archived</span>
+                    {% elif batch.is_active %}
+                    <span class="badge-status active">Active</span>
+                    {% else %}
+                    <span class="badge-status discontinued">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <h3 class="h4 fw-bold mb-1">{{ batch.name }}</h3>
+            <div class="badge bg-taal-primary mb-2">{{ batch.course }}</div>
+            <p class="text-secondary small mb-3">{{ batch.description|default:"Standard curriculum batch at Radhhanand Sangeet Vidyalaya." }}</p>
+
+            <!-- Capacity Meter -->
+            <div class="p-2 bg-light rounded border mb-3">
+                <div class="d-flex justify-content-between small fw-semibold mb-1">
+                    <span>Batch Capacity:</span>
+                    <span>{{ active_enrollments.count }} / {{ batch.capacity }} Enrolled</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar {% if active_enrollments.count >= batch.capacity %}bg-danger{% elif active_enrollments.count >= batch.capacity|add:"-2" %}bg-warning{% else %}bg-success{% endif %}"
+                         role="progressbar"
+                         style="width: {% widthratio active_enrollments.count batch.capacity 100 %}%;"></div>
+                </div>
+                {% if active_enrollments.count >= batch.capacity %}
+                <div class="text-danger small mt-1"><i class="bi bi-exclamation-triangle"></i> Batch has reached maximum capacity</div>
+                {% endif %}
+            </div>
+
+            <div class="list-group list-group-flush small mb-3 border-top pt-2">
+                <div class="list-group-item px-0 py-2 d-flex justify-content-between">
+                    <span class="text-muted">Curriculum Level:</span>
+                    <span class="fw-semibold">{{ batch.get_level_display }}</span>
+                </div>
+                <div class="list-group-item px-0 py-2 d-flex justify-content-between">
+                    <span class="text-muted">Standard Monthly Fee:</span>
+                    <span class="fw-bold text-success">₹{{ batch.monthly_fee }}</span>
+                </div>
+                <div class="list-group-item px-0 py-2 d-flex justify-content-between">
+                    <span class="text-muted">Instructor:</span>
+                    <span class="fw-semibold">{{ batch.teacher_name|default:academy_settings.teacher_name }}</span>
+                </div>
+                <div class="list-group-item px-0 py-2 d-flex justify-content-between">
+                    <span class="text-muted">Conducted Classes:</span>
+                    <span class="fw-semibold">{{ attendance_stats.conducted_sessions_count }}</span>
+                </div>
+                <div class="list-group-item px-0 py-2 d-flex justify-content-between">
+                    <span class="text-muted">Attendance Rate:</span>
+                    <span class="fw-bold {% if attendance_stats.batch_percentage >= 75 %}text-success{% else %}text-danger{% endif %}">
+                        {{ attendance_stats.batch_percentage|default:"--" }}%
+                    </span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'batch_edit' batch.id %}" class="btn btn-sm btn-taal-outline flex-grow-1">
+                    <i class="bi bi-pencil"></i> Edit Details
+                </a>
+                <a href="{% url 'session_create' %}?batch={{ batch.id }}" class="btn btn-sm btn-taal-primary flex-grow-1">
+                    <i class="bi bi-calendar-plus"></i> Extra Class
+                </a>
+                <a href="{% url 'batch_archive_toggle' batch.id %}" class="btn btn-sm {% if batch.is_archived %}btn-outline-success{% else %}btn-outline-warning{% endif %}"
+                   data-confirm="{% if batch.is_archived %}Restore this batch?{% else %}Archive batch '{{ batch.name }}'? All student records and past classes will be safely preserved.{% endif %}">
+                    {% if batch.is_archived %}<i class="bi bi-box-arrow-up"></i> Restore{% else %}<i class="bi bi-archive"></i> Archive{% endif %}
+                </a>
+                <a href="{% url 'batch_delete' batch.id %}" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash"></i> Delete Batch
+                </a>
+            </div>
+        </div>
+
+        <!-- Add Student to Batch Form -->
+        <div class="taal-card mb-4">
+            <h4 class="taal-card-title mb-3" style="font-size: 16px;"><i class="bi bi-person-plus text-warning"></i> Add Student to Batch</h4>
+            {% if unassigned_students %}
+            <form method="POST" action="{% url 'batch_assign_student' batch.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Select Active Student</label>
+                    <select name="student_id" required class="form-select form-select-sm">
+                        <option value="">-- Choose Student --</option>
+                        {% for st in unassigned_students %}
+                        <option value="{{ st.id }}">{{ st.full_name }} ({{ st.student_id }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm btn-taal-primary w-100" {% if active_enrollments.count >= batch.capacity %}disabled title="Batch is at full capacity"{% endif %}>
+                    <i class="bi bi-check-lg"></i> Enroll Student
+                </button>
+            </form>
+            {% else %}
+            <p class="text-muted small mb-0">All active students are enrolled in this batch or no unassigned students exist.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Column: Recurring Schedule Rules, Students, Sessions -->
+    <div class="col-12 col-lg-8">
+
+        <!-- Recurring Weekly Schedule Rules -->
+        <div class="taal-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h4 class="taal-card-title mb-1" style="font-size: 17px;"><i class="bi bi-clock-history text-primary"></i> Recurring Timetable Rules</h4>
+                    <p class="small text-muted mb-0">Automatic weekly class slots (Tuesday, Thursday, Saturday & Sunday presets).</p>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+                    <i class="bi bi-plus-lg"></i> Add Weekly Slot
+                </button>
+            </div>
+
+            {% if recurring_schedules %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Day of Week</th>
+                            <th>Time Slot</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rule in recurring_schedules %}
+                        <tr>
+                            <td><strong>{{ rule.get_day_of_week_display }}</strong></td>
+                            <td>{{ rule.start_time|time:"g:i A" }} &ndash; {{ rule.end_time|time:"g:i A" }}</td>
+                            <td>{{ rule.duration_minutes }} minutes</td>
+                            <td>
+                                {% if rule.is_active %}
+                                <span class="badge bg-success-subtle text-success border">Active Recurring</span>
+                                {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary border">Paused</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'batch_schedule_delete' rule.id %}"
+                                   data-confirm="Delete this recurring timetable rule? Historical classes are preserved."
+                                   class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 11px;">
+                                    <i class="bi bi-trash"></i> Remove
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-3 bg-light rounded border text-center text-muted small">
+                <i class="bi bi-calendar-event fs-4 d-block text-secondary mb-1"></i>
+                No recurring timetable rules configured for this batch yet.
+                <div class="mt-2">
+                    <button type="button" class="btn btn-sm btn-taal-primary" data-bs-toggle="modal" data-bs-target="#addScheduleModal">
+                        <i class="bi bi-plus-lg"></i> Set Up Weekly Timetable
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Enrolled Students Table -->
+        <div class="taal-card mb-4">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h4 class="taal-card-title mb-0" style="font-size: 17px;"><i class="bi bi-people text-success"></i> Enrolled Students ({{ active_enrollments.count }})</h4>
+                <span class="small text-muted">Max: {{ batch.capacity }}</span>
+            </div>
+
+            {% if active_enrollments %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Enrolled On</th>
+                            <th>Contact / WhatsApp</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for enr in active_enrollments %}
+                        <tr>
+                            <td><span class="badge bg-light text-dark font-monospace border">{{ enr.student.student_id }}</span></td>
+                            <td><strong><a href="{% url 'student_detail' enr.student.id %}" class="text-decoration-none text-dark">{{ enr.student.full_name }}</a></strong></td>
+                            <td>{{ enr.enrolled_date|date:"d M Y" }}</td>
+                            <td class="small">{{ enr.student.guardian_whatsapp|default:enr.student.phone|default:"--" }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'batch_remove_student' batch.id enr.student.id %}"
+                                   data-confirm="Remove {{ enr.student.full_name }} from future participation in {{ batch.name }}? Historical attendance will be safely preserved."
+                                   class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 11px;">
+                                    Remove
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4 text-muted small">
+                No students enrolled in this batch yet. Use the form on the left to assign students.
+            </div>
+            {% endif %}
+
+            <!-- Historical / Past Members -->
+            {% if past_enrollments %}
+            <div class="mt-4 pt-3 border-top">
+                <h6 class="text-muted small fw-bold text-uppercase mb-2">Historical Members (Preserved for Records)</h6>
+                <div class="taal-table-responsive">
+                    <table class="taal-table small">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Enrolled Date</th>
+                                <th>Left Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enr in past_enrollments %}
+                            <tr class="text-muted">
+                                <td><a href="{% url 'student_detail' enr.student.id %}">{{ enr.student.full_name }}</a></td>
+                                <td>{{ enr.enrolled_date|date:"d M Y" }}</td>
+                                <td>{{ enr.left_date|date:"d M Y"|default:"--" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Sessions for this Batch -->
+        <div class="taal-card">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h4 class="taal-card-title mb-0" style="font-size: 17px;"><i class="bi bi-calendar-week text-primary"></i> Batch Class Sessions</h4>
+                <a href="{% url 'session_create' %}?batch={{ batch.id }}" class="btn btn-sm btn-taal-outline"><i class="bi bi-plus-lg"></i> Schedule Class</a>
+            </div>
+
+            {% if recent_sessions %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Topic</th>
+                            <th class="text-end">Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sess in recent_sessions %}
+                        <tr>
+                            <td>{{ sess.date|date:"d M Y" }}</td>
+                            <td>{{ sess.start_time|time:"g:i A" }} - {{ sess.end_time|time:"g:i A" }}</td>
+                            <td><span class="badge-status {{ sess.status }}">{{ sess.get_status_display }}</span></td>
+                            <td>{{ sess.lesson_topic|default:"--" }}</td>
+                            <td class="text-end">
+                                {% if sess.status == 'conducted' %}
+                                <a href="{% url 'attendance_mark' sess.id %}" class="btn btn-sm btn-taal-primary py-0 px-2" style="font-size: 11px;">
+                                    {% if sess.is_attendance_saved %}Update ({{ sess.attendance_count }}){% else %}Mark Now{% endif %}
+                                </a>
+                                {% elif sess.status == 'scheduled' %}
+                                <a href="{% url 'session_mark_conducted' sess.id %}" class="btn btn-sm btn-taal-maroon py-0 px-2" style="font-size: 11px;">
+                                    Conduct
+                                </a>
+                                {% else %}
+                                <span class="text-muted small">Cancelled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4 text-muted small">
+                No classes scheduled for this batch yet.
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal: Add Recurring Weekly Schedule Rule -->
+<div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="addScheduleLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'batch_schedule_add' batch.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="batch" value="{{ batch.id }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addScheduleLabel"><i class="bi bi-clock-history text-primary"></i> Add Weekly Recurring Timetable Slot</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-light border small mb-3">
+                        <i class="bi bi-info-circle me-1"></i> <strong>Academy Defaults:</strong>
+                        <ul class="mb-0 ps-3">
+                            <li>Tuesday, Thursday, Saturday: 5:00-6:00 PM, 6:00-7:00 PM, or 7:00-8:00 PM</li>
+                            <li>Sunday: 8:00-11:00 AM (or shorter split session)</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Day of Week *</label>
+                        {{ schedule_form.day_of_week }}
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">Start Time *</label>
+                            {{ schedule_form.start_time }}
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold">End Time *</label>
+                            {{ schedule_form.end_time }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Duration (Minutes)</label>
+                        {{ schedule_form.duration_minutes }}
+                    </div>
+
+                    <div class="form-check form-switch mb-2">
+                        {{ schedule_form.is_active }}
+                        <label class="form-check-label small" for="{{ schedule_form.is_active.id_for_label }}">Active (include in upcoming schedule generation)</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-taal-primary btn-sm"><i class="bi bi-plus-lg"></i> Add Rule & Schedule Ahead</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

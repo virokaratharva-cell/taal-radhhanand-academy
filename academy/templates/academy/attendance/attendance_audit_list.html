@@ -1,0 +1,75 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Attendance Audit Log — TAAL{% endblock %}
+{% block page_title %}Attendance Correction Audit Trail{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-shield-check text-warning"></i> Correction & Change Audit Logs</h3>
+            <p class="text-muted small mb-0">Transparent tracking of every adjustment made to finalized attendance.</p>
+        </div>
+        <a href="{% url 'attendance_history' %}" class="btn btn-sm btn-taal-outline"><i class="bi bi-arrow-left"></i> Back to History</a>
+    </div>
+
+    {% if page_obj.object_list %}
+    <div class="taal-table-responsive">
+        <table class="taal-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Class Session</th>
+                    <th>Student</th>
+                    <th>Old Status</th>
+                    <th>New Status</th>
+                    <th>Modified By</th>
+                    <th>Reason Stated</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in page_obj.object_list %}
+                <tr>
+                    <td>{{ log.changed_at|date:"d M Y, H:i:s" }}</td>
+                    <td>
+                        <a href="{% url 'attendance_mark' log.session.id %}">
+                            {{ log.session.batch.name }} ({{ log.session.date|date:"d M Y" }})
+                        </a>
+                    </td>
+                    <td><strong><a href="{% url 'student_detail' log.student.id %}">{{ log.student.full_name }}</a></strong></td>
+                    <td><span class="badge-status {{ log.old_status }}">{{ log.old_status|title }}</span></td>
+                    <td><span class="badge-status {{ log.new_status }}">{{ log.new_status|title }}</span></td>
+                    <td>{{ log.changed_by.username|default:"Teacher" }}</td>
+                    <td class="text-muted">{{ log.reason|default:"--" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} audit records</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-shield-check"></i></div>
+        <div class="empty-state-title">No Audit Logs Yet</div>
+        <div class="empty-state-text">No attendance records have been modified post-saving yet. Corrections will automatically appear here.</div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

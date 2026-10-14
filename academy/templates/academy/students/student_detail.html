@@ -1,0 +1,449 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}{{ student.full_name }} ({{ student.student_id }}) — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Student Profile{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Left Column: Student Bio & Summary -->
+    <div class="col-12 col-lg-4">
+        <!-- Identity Card -->
+        <div class="taal-card text-center mb-4">
+            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3"
+                 style="width: 80px; height: 80px; background: linear-gradient(135deg, #8b0000, #c69214); color: #FFF; font-size: 32px; font-weight: bold;">
+                {{ student.first_name|slice:":1" }}{{ student.last_name|slice:":1" }}
+            </div>
+            <h3 class="h4 fw-bold mb-1">{{ student.full_name }}</h3>
+            <span class="badge bg-light text-dark font-monospace border mb-2">{{ student.student_id }}</span>
+            <div class="d-flex justify-content-center gap-2 mb-3">
+                {% if student.is_archived %}
+                <span class="badge bg-secondary">Archived</span>
+                {% else %}
+                <span class="badge-status {{ student.status }}">{{ student.get_status_display }}</span>
+                {% endif %}
+                <span class="badge bg-secondary-subtle text-secondary border">{{ student.get_level_display }}</span>
+            </div>
+
+            <!-- Financial Summary Pill -->
+            <div class="p-2 bg-light rounded border text-center mb-3">
+                <div class="row g-0">
+                    <div class="col-6 border-end">
+                        <div class="small text-muted text-uppercase" style="font-size: 0.7rem;">Monthly Fee</div>
+                        <div class="fw-bold text-dark">₹{{ student.monthly_fee }}</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="small text-muted text-uppercase" style="font-size: 0.7rem;">Fee Dues</div>
+                        <div class="fw-bold {% if fee_balance > 0 %}text-danger{% else %}text-success{% endif %}">
+                            ₹{{ fee_balance }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2 border-top pt-3">
+                <a href="{% url 'student_edit' student.id %}" class="btn btn-sm btn-taal-outline"><i class="bi bi-pencil"></i> Edit</a>
+                <a href="{% url 'student_print' student.id %}" target="_blank" class="btn btn-sm btn-taal-outline"><i class="bi bi-printer"></i> Print</a>
+                <a href="{% url 'payment_create' %}?student={{ student.id }}" class="btn btn-sm btn-taal-primary"><i class="bi bi-receipt"></i> Pay Fee</a>
+                <a href="{% url 'student_archive_toggle' student.id %}"
+                   class="btn btn-sm {% if student.is_archived %}btn-outline-success{% else %}btn-outline-danger{% endif %}"
+                   data-confirm="{% if student.is_archived %}Restore student from archive?{% else %}Archive {{ student.full_name }}? Historical attendance and fee records are preserved.{% endif %}">
+                    {% if student.is_archived %}<i class="bi bi-box-arrow-up"></i> Restore{% else %}<i class="bi bi-archive"></i> Archive{% endif %}
+                </a>
+            </div>
+        </div>
+
+        <!-- Attendance Performance Card -->
+        <div class="taal-card mb-4">
+            <div class="taal-card-header">
+                <h4 class="taal-card-title" style="font-size: 16px;"><i class="bi bi-pie-chart text-warning"></i> Attendance Performance</h4>
+            </div>
+
+            {% if attendance_stats.eligible_count > 0 %}
+            <div class="text-center py-2">
+                <div class="display-6 fw-bold {% if attendance_stats.percentage >= academy_settings.attendance_threshold %}text-success{% else %}text-danger{% endif %}">
+                    {{ attendance_stats.percentage }}%
+                </div>
+                <div class="small text-muted mb-3">Conducted Session Ratio</div>
+            </div>
+
+            <div class="list-group list-group-flush small">
+                <div class="list-group-item d-flex justify-content-between px-0 py-2">
+                    <span class="text-muted">Eligible Conducted Classes:</span>
+                    <span class="fw-bold">{{ attendance_stats.eligible_count }}</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between px-0 py-2">
+                    <span class="text-muted">Present:</span>
+                    <span class="fw-bold text-success">{{ attendance_stats.present_count }}</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between px-0 py-2">
+                    <span class="text-muted">Absent:</span>
+                    <span class="fw-bold text-danger">{{ attendance_stats.absent_count }}</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between px-0 py-2">
+                    <span class="text-muted">On Leave:</span>
+                    <span class="fw-bold text-warning">{{ attendance_stats.leave_count }}</span>
+                </div>
+                {% if attendance_stats.consecutive_absences > 0 %}
+                <div class="list-group-item d-flex justify-content-between px-0 py-2 bg-danger-subtle rounded px-2">
+                    <span class="text-danger fw-semibold">Recent Consecutive Misses:</span>
+                    <span class="fw-bold text-danger">{{ attendance_stats.consecutive_absences }}</span>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="text-center py-3 text-muted small">
+                No conducted classes held since student's enrollment.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Contact & Guardian Details Card -->
+        <div class="taal-card mb-4">
+            <h4 class="taal-card-title mb-3" style="font-size: 16px;"><i class="bi bi-info-circle text-info"></i> Contact & Parent Info</h4>
+            <div class="list-group list-group-flush small">
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Admission Date:</div>
+                    <div class="fw-semibold">{{ student.enrollment_date|date:"d M Y" }}</div>
+                </div>
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Student Phone:</div>
+                    <div class="fw-semibold">{{ student.phone|default:"Not recorded" }}</div>
+                </div>
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Guardian / Parent Name:</div>
+                    <div class="fw-semibold">{{ student.guardian_name|default:"--" }}</div>
+                </div>
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Guardian Phone:</div>
+                    <div class="fw-semibold">{{ student.guardian_phone|default:"--" }}</div>
+                </div>
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Guardian WhatsApp:</div>
+                    <div class="fw-semibold text-success">
+                        <i class="bi bi-whatsapp"></i> {{ student.guardian_whatsapp|default:"Not recorded" }}
+                    </div>
+                </div>
+                {% if student.address %}
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Residential Address:</div>
+                    <div class="fw-semibold">{{ student.address }}</div>
+                </div>
+                {% endif %}
+                {% if student.date_of_birth %}
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Date of Birth:</div>
+                    <div class="fw-semibold">{{ student.date_of_birth|date:"d M Y" }}</div>
+                </div>
+                {% endif %}
+                {% if student.notes %}
+                <div class="list-group-item px-0 py-2">
+                    <div class="text-muted">Teacher Notes:</div>
+                    <div class="text-secondary mt-1">{{ student.notes }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Classes, Batches, Fees, Assignments -->
+    <div class="col-12 col-lg-8">
+
+        <!-- Upcoming Classes Card (Requirement 9) -->
+        <div class="taal-card mb-4">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h4 class="taal-card-title mb-0" style="font-size: 17px;"><i class="bi bi-calendar-check text-primary"></i> Upcoming Classes</h4>
+                <a href="{% url 'session_list' %}" class="btn btn-sm btn-taal-outline">View Full Timetable</a>
+            </div>
+
+            {% if upcoming_classes %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Batch</th>
+                            <th>Instructor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for uc in upcoming_classes %}
+                        <tr>
+                            <td><strong>{{ uc.date|date:"D, d M Y" }}</strong></td>
+                            <td>{{ uc.start_time|time:"g:i A" }} &ndash; {{ uc.end_time|time:"g:i A" }}</td>
+                            <td>{{ uc.batch.name }} ({{ uc.batch.course }})</td>
+                            <td>{{ uc.batch.teacher_name|default:academy_settings.teacher_name }}</td>
+                            <td>
+                                {% if uc.is_rescheduled %}
+                                <span class="badge bg-info-subtle text-info border">Rescheduled</span>
+                                {% else %}
+                                <span class="badge bg-primary-subtle text-primary border">Scheduled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0 py-2">No upcoming classes scheduled in the next 30 days for this student's batches.</p>
+            {% endif %}
+        </div>
+
+        <!-- Batch Enrollments -->
+        <div class="taal-card mb-4">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h4 class="taal-card-title mb-0" style="font-size: 17px;"><i class="bi bi-diagram-3 text-maroon"></i> Batch Enrollments</h4>
+                {% if available_batches %}
+                <form method="POST" action="{% url 'batch_assign_student' available_batches.first.id %}" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                    <select name="batch_id" class="form-select form-select-sm" onchange="this.form.action='/batches/' + this.value + '/assign/';">
+                        {% for ab in available_batches %}
+                        <option value="{{ ab.id }}">{{ ab.name }} ({{ ab.course }})</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-taal-primary text-nowrap"><i class="bi bi-plus"></i> Join Batch</button>
+                </form>
+                {% endif %}
+            </div>
+
+            {% if enrollments %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Batch Name</th>
+                            <th>Status</th>
+                            <th>Enrolled Date</th>
+                            <th>Left Date</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for enr in enrollments %}
+                        <tr>
+                            <td><strong><a href="{% url 'batch_detail' enr.batch.id %}" class="text-decoration-none text-dark">{{ enr.batch.name }}</a></strong> ({{ enr.batch.course }})</td>
+                            <td>
+                                {% if enr.is_active %}
+                                <span class="badge bg-success-subtle text-success border">Active Member</span>
+                                {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary border">Past Enrollment</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ enr.enrolled_date|date:"d M Y" }}</td>
+                            <td>{{ enr.left_date|date:"d M Y"|default:"Present" }}</td>
+                            <td class="text-end">
+                                {% if enr.is_active %}
+                                <a href="{% url 'batch_remove_student' enr.batch.id student.id %}"
+                                   data-confirm="Deactivate {{ student.full_name }} from {{ enr.batch.name }}? Historical attendance will be kept."
+                                   class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 11px;">
+                                    End Enrollment
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0">Student is not assigned to any batch yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Complete Fee Payment Records & Dues -->
+        <div class="taal-card mb-4">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h4 class="taal-card-title mb-1" style="font-size: 17px;"><i class="bi bi-cash-coin text-success"></i> Tuition Fees & Receipts</h4>
+                    <div class="small text-muted">
+                        Total Due: ₹{{ total_due }} &bull; Total Paid: <span class="text-success fw-bold">₹{{ total_paid }}</span> &bull; Outstanding Balance: <span class="{% if fee_balance > 0 %}text-danger fw-bold{% else %}text-muted{% endif %}">₹{{ fee_balance }}</span>
+                    </div>
+                </div>
+                <a href="{% url 'payment_create' %}?student={{ student.id }}" class="btn btn-sm btn-taal-primary">
+                    <i class="bi bi-plus-lg"></i> Record Payment
+                </a>
+            </div>
+
+            {% if payments %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Receipt #</th>
+                            <th>Billing Period</th>
+                            <th class="text-end">Due</th>
+                            <th class="text-end">Paid</th>
+                            <th class="text-end">Balance</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Method</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in payments %}
+                        <tr {% if p.is_reversed %}class="opacity-50 text-decoration-line-through"{% endif %}>
+                            <td>
+                                <a href="{% url 'receipt_view' p.id %}" class="badge bg-light text-dark font-monospace border text-decoration-none">
+                                    {{ p.receipt_number }}
+                                </a>
+                            </td>
+                            <td>{{ p.billing_period|default:"--" }}</td>
+                            <td class="text-end">₹{{ p.amount_due }}</td>
+                            <td class="text-end text-success fw-bold">₹{{ p.amount_paid }}</td>
+                            <td class="text-end fw-bold {% if p.outstanding_balance > 0 %}text-danger{% else %}text-muted{% endif %}">
+                                ₹{{ p.outstanding_balance }}
+                            </td>
+                            <td>
+                                {% if p.is_reversed %}
+                                <span class="badge bg-danger">Reversed</span>
+                                {% elif p.is_fully_paid %}
+                                <span class="badge bg-success-subtle text-success border">Paid</span>
+                                {% elif p.is_partial %}
+                                <span class="badge bg-warning-subtle text-warning-emphasis border">Partial</span>
+                                {% else %}
+                                <span class="badge bg-danger-subtle text-danger border">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ p.payment_date|date:"d M Y"|default:"--" }}</td>
+                            <td>{{ p.get_payment_method_display }}</td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'receipt_view' p.id %}" class="btn btn-outline-secondary py-0 px-2" title="View Receipt">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'receipt_download_pdf' p.id %}" class="btn btn-outline-primary py-0 px-2" title="Download PDF">
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    </a>
+                                    <a href="{% url 'receipt_send_whatsapp' p.id %}" class="btn btn-outline-success py-0 px-2" title="Send WhatsApp">
+                                        <i class="bi bi-whatsapp"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0 py-2">No payment transactions on record for this student.</p>
+            {% endif %}
+        </div>
+
+        <!-- Attendance History -->
+        <div class="taal-card mb-4">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h4 class="taal-card-title mb-0" style="font-size: 17px;"><i class="bi bi-clock-history text-primary"></i> Attendance History</h4>
+                <a href="{% url 'attendance_history' %}?student={{ student.id }}" class="btn btn-sm btn-taal-outline">View Full Register</a>
+            </div>
+
+            {% if attendance_stats.records %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Batch</th>
+                            <th>Status</th>
+                            <th>Topic</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in attendance_stats.records|slice:":10" %}
+                        <tr>
+                            <td>{{ r.session.date|date:"d M Y" }}</td>
+                            <td>{{ r.session.batch.name }}</td>
+                            <td>
+                                <span class="badge-status {{ r.status }}">{{ r.status|title }}</span>
+                            </td>
+                            <td>{{ r.session.lesson_topic|default:"--" }}</td>
+                            <td class="small text-muted">{{ r.remarks|default:"--" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-muted small py-2">No conducted attendance sessions on record.</div>
+            {% endif %}
+        </div>
+
+        <!-- Practice Assignments -->
+        <div class="taal-card mb-4">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h4 class="taal-card-title mb-0" style="font-size: 17px;"><i class="bi bi-card-checklist text-success"></i> Homework & Riyaz Practice</h4>
+                <a href="{% url 'assignment_create' %}?student={{ student.id }}" class="btn btn-sm btn-taal-outline"><i class="bi bi-plus-lg"></i> Assign Task</a>
+            </div>
+
+            {% if assignments %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Target Tempo</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in assignments %}
+                        <tr>
+                            <td><strong>{{ a.title }}</strong></td>
+                            <td>{{ a.due_date|date:"d M Y" }}</td>
+                            <td><span class="badge bg-secondary">{{ a.get_status_display }}</span></td>
+                            <td>{{ a.target_tempo|default:"--" }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'assignment_edit' a.id %}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">Review</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted small mb-0 py-2">No homework tasks assigned yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Student Progress Milestones -->
+        <div class="taal-card">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <h4 class="taal-card-title mb-0" style="font-size: 17px;"><i class="bi bi-graph-up text-info"></i> Learning Milestones</h4>
+                <a href="{% url 'progress_create' %}?student={{ student.id }}" class="btn btn-sm btn-taal-outline"><i class="bi bi-plus-lg"></i> Log Milestone</a>
+            </div>
+
+            {% if progress_records %}
+            {% for pr in progress_records %}
+            <div class="border-start border-3 border-warning ps-3 mb-3 pb-2">
+                <div class="d-flex justify-content-between">
+                    <h6 class="fw-bold mb-1">{{ pr.current_level|title }} Milestone</h6>
+                    <small class="text-muted">{{ pr.date|date:"d M Y" }}</small>
+                </div>
+                {% if pr.taals_studied %}
+                <div class="small"><strong>Taals Practiced:</strong> {{ pr.taals_studied }}</div>
+                {% endif %}
+                {% if pr.topics_completed %}
+                <div class="small text-success"><strong>Mastered:</strong> {{ pr.topics_completed }}</div>
+                {% endif %}
+                {% if pr.topics_needing_revision %}
+                <div class="small text-danger"><strong>Revision needed:</strong> {{ pr.topics_needing_revision }}</div>
+                {% endif %}
+                {% if pr.next_goal %}
+                <div class="small text-muted"><strong>Next Goal:</strong> {{ pr.next_goal }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-muted small mb-0 py-2">No musical progress milestones recorded yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

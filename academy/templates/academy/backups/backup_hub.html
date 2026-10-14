@@ -1,0 +1,105 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Backup & Data Management — TAAL{% endblock %}
+{% block page_title %}Database Backup & Recovery{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12 col-lg-7">
+        <div class="taal-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="taal-card-title"><i class="bi bi-database-check text-warning"></i> Active Database State</h3>
+                <span class="badge bg-success-subtle text-success border px-2 py-1">SQLite Operational</span>
+            </div>
+
+            <div class="p-3 bg-light rounded border mb-4">
+                <div class="row g-2 small">
+                    <div class="col-6">
+                        <span class="text-muted">Database File:</span>
+                        <div class="fw-bold font-monospace text-truncate">{{ db_path }}</div>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted">Database Size:</span>
+                        <div class="fw-bold">{{ db_size_kb }} KB</div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="{% url 'backup_create' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-taal-primary py-2 px-4 shadow-sm">
+                    <i class="bi bi-shield-lock-fill me-1"></i> Create Snapshot Backup Now
+                </button>
+            </form>
+        </div>
+
+        <!-- Available Backups List -->
+        <div class="taal-card">
+            <div class="taal-card-header">
+                <h4 class="taal-card-title" style="font-size: 17px;"><i class="bi bi-archive text-primary"></i> Available Database Snapshots ({{ backups|length }})</h4>
+            </div>
+
+            {% if backups %}
+            <div class="taal-table-responsive">
+                <table class="taal-table">
+                    <thead>
+                        <tr>
+                            <th>Backup File</th>
+                            <th>Created Timestamp</th>
+                            <th>Size</th>
+                            <th class="text-end">Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in backups %}
+                        <tr>
+                            <td>
+                                <span class="font-monospace fw-semibold">{{ b.filename }}</span>
+                            </td>
+                            <td>{{ b.modified_time|date:"d M Y, H:i:s" }}</td>
+                            <td>{{ b.size_kb }} KB</td>
+                            <td class="text-end">
+                                <a href="{% url 'backup_download' b.filename %}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">
+                                    <i class="bi bi-cloud-arrow-down"></i> Download
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-muted small py-3 text-center">
+                No backup snapshots created yet. Click "Create Snapshot Backup Now" above.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Column: Safe Restoration Procedure -->
+    <div class="col-12 col-lg-5">
+        <div class="taal-card">
+            <div class="taal-card-header">
+                <h4 class="taal-card-title" style="font-size: 16px;"><i class="bi bi-shield-exclamation text-danger"></i> Safe Restoration Guide</h4>
+            </div>
+
+            <div class="small text-secondary">
+                <p>To preserve data integrity and prevent SQLite database corruption, active databases should never be blindly replaced while the server is holding active file locks.</p>
+
+                <h6 class="fw-bold text-dark mt-3 mb-2">Step-by-Step Restoration Procedure:</h6>
+                <ol class="ps-3 mb-3">
+                    <li class="mb-2"><strong>Stop the Server:</strong> Terminate the running Django development server in your terminal window (press <kbd>Ctrl + C</kbd>).</li>
+                    <li class="mb-2"><strong>Make a Safety Copy:</strong> Rename your active database <code>db.sqlite3</code> to <code>db.sqlite3.old</code>.</li>
+                    <li class="mb-2"><strong>Copy the Backup:</strong> Copy your chosen snapshot from the <code>backups/</code> folder into the project root directory and name it <code>db.sqlite3</code>.</li>
+                    <li class="mb-2"><strong>Restart the Server:</strong> Run <code>python manage.py runserver</code> in PowerShell.</li>
+                    <li class="mb-0"><strong>Verify:</strong> Log in to the application and verify your restored students and attendance records.</li>
+                </ol>
+
+                <div class="alert alert-warning py-2 px-3 small mb-0">
+                    <i class="bi bi-lock-fill me-1"></i> <strong>Security Notice:</strong> Backups contain sensitive academy records. Always store downloaded backup copies on a secure private drive and never commit them to public version control.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

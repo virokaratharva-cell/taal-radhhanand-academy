@@ -1,0 +1,125 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Lessons Diary — TAAL{% endblock %}
+{% block page_title %}Lesson Diary & Teaching Notes{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-journal-bookmark text-warning"></i> Lesson Notes Archive</h3>
+            <p class="text-muted small mb-0">Record bols taught, tempo targets, homework, and plans for subsequent sessions.</p>
+        </div>
+        <div>
+            <a href="{% url 'lesson_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-journal-plus"></i> Record Lesson Notes
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border">
+        <div class="col-12 col-md-4">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search topic or bols...">
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <select name="batch" class="form-select form-select-sm">
+                <option value="">-- All Batches --</option>
+                {% for b in batches %}
+                <option value="{{ b.id }}" {% if batch_filter == b.id|stringformat:"i" %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <select name="taal" class="form-select form-select-sm">
+                <option value="">-- All Taals --</option>
+                {% for t in taals %}
+                <option value="{{ t.id }}" {% if taal_filter == t.id|stringformat:"i" %}selected{% endif %}>{{ t.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-dark w-100">Filter</button>
+            {% if query or batch_filter or taal_filter %}
+            <a href="{% url 'lesson_list' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-circle"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Lessons List -->
+    {% if page_obj.object_list %}
+    <div class="row g-3">
+        {% for les in page_obj.object_list %}
+        <div class="col-12 col-md-6">
+            <div class="card h-100 border shadow-sm rounded-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <span class="badge bg-light text-dark border">{{ les.date|date:"D, d M Y" }}</span>
+                            <span class="badge bg-secondary-subtle text-secondary border">{{ les.batch.name }}</span>
+                        </div>
+                        {% if les.taal %}
+                        <span class="badge bg-warning-subtle text-warning border">{{ les.taal.name }}</span>
+                        {% endif %}
+                    </div>
+
+                    <h5 class="fw-bold mb-2">
+                        <a href="{% url 'lesson_detail' les.id %}" class="text-decoration-none text-dark">{{ les.topic }}</a>
+                    </h5>
+
+                    {% if les.bol_notation %}
+                    <div class="bol-notation-box small py-2 px-3 my-2" style="max-height: 85px; overflow-y: hidden;">
+                        {{ les.bol_notation|truncatechars:120 }}
+                    </div>
+                    {% endif %}
+
+                    {% if les.homework %}
+                    <div class="small text-muted mb-2">
+                        <strong class="text-dark">Homework:</strong> {{ les.homework|truncatewords:15 }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top d-flex justify-content-between align-items-center py-2">
+                    <a href="{% url 'lesson_detail' les.id %}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">
+                        <i class="bi bi-eye"></i> View Lesson
+                    </a>
+                    <a href="{% url 'assignment_create' %}?lesson={{ les.id }}" class="btn btn-sm btn-taal-primary py-0 px-2" style="font-size: 11px;">
+                        <i class="bi bi-card-checklist"></i> Create Task
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} lessons</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&batch={{ batch_filter }}&taal={{ taal_filter }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&batch={{ batch_filter }}&taal={{ taal_filter }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-journal-bookmark"></i></div>
+        <div class="empty-state-title">No Lesson Notes Found</div>
+        <div class="empty-state-text">Start recording what you teach in each class to build a curriculum archive.</div>
+        <a href="{% url 'lesson_create' %}" class="btn btn-taal-primary"><i class="bi bi-journal-plus"></i> Record First Lesson</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,2276 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$sGwSN6ksv0juJDfBjIWkl9$788Idmkp9OnQE33EQORm4PxCAvhiLkspN6QTJsS5fgU=",
+    "last_login": "2026-10-13T19:09:15.436Z",
+    "is_superuser": true,
+    "username": "teacher",
+    "first_name": "Pt.",
+    "last_name": "Suresh Sharma",
+    "email": "teacher@taalacademy.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-10-13T15:30:50.172Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$tWqleZHqHoglqCfaRCDgjX$RpRoyxa9oy0WYbk8ZnuyKeFGP1GyJLB8LUeJ+UYtZcE=",
+    "last_login": "2026-10-14T03:15:38.595Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-10-14T03:15:36.894Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "3m3q7raeb9ypv2kq8r00rsr9q24fcjct",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAUBe_iGlle4mBT0ucM0d9MAsiW4qRC3B0ipYD2zcx7qRG2dRq3Jss4s7ooq06_GwI9pOyA71BuVVMt6zKj3hV90KaHyvK8Hu7fwQRt-ta-YySMnbUUkyRxzubExESeXY8m9z0lk0JmEmRnvD-DpOAtAHKIVr0_A9M4uw:1xGhsB:dJO3IUrkqJ2KdwsOzlYTQau3KPb6Ua-eElWQMeur3ZU",
+    "expire_date": "2026-10-27T19:09:15.445Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "hf8qixh9kld429y86jnw6urcw72oie1t",
+  "fields": {
+    "session_data": ".eJxVjDsOwyAQRO9CHaEFsxhSpvcZEJ8lOIlAMnYV5e6xJRfJlPPezJs5v63FbZ0WNyd2ZYpdfrvg45PqAdLD13vjsdV1mQM_FH7SzqeW6HU73b-D4nvZ18MeyJRo1CobHIzwoGU0MlkrNVhQ0eokxKgARSBEYyQGg4DWImXFPl-wcjY8:1xGpSs:MMx7BQLM3ZUSGoOxPPn_oyNZ3lS-e45le1AZ9FFKaKQ",
+    "expire_date": "2026-10-28T03:15:38.604Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "o235qwu5vwwjaw5vguumiwtq8f7ati60",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyHAFhCP3v0GsrBbqRpISnsy_rtt0oNe5jDvzbxFxHUpce08x4nERRhx-u0S5ifXHdAD673J3OoyT0nuijxol7dG_Loe7t9BwV62dQAmHUbUgGycA8jBDQnOozKAlK0yvKVBG0grr-3gwAfmoNh7r5IVny_ZYDdE:1xGhee:Tr2hwBIGR67JvLZkzP3NnyzFEFqkKyI_l-jLjl-8Y-g",
+    "expire_date": "2026-10-27T18:55:16.851Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "r0ftrou0jq118q1z2pd5ulbngp71r7dd",
+  "fields": {
+    "session_data": ".eJxVjDkOwjAUBe_iGlle4mBT0ucM0d9MAsiW4qRC3B0ipYD2zcx7qRG2dRq3Jss4s7ooq06_GwI9pOyA71BuVVMt6zKj3hV90KaHyvK8Hu7fwQRt-ta-YySMnbUUkyRxzubExESeXY8m9z0lk0JmEmRnvD-DpOAtAHKIVr0_A9M4uw:1xGgGK:nDttvQnL_a5LddgnJpIg_-dNsUaWyYBQbHSz89oCJJM",
+    "expire_date": "2026-10-27T17:26:04.431Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "yf22x73rwkexigcxwnzr3gvne2137jti",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCBAo5L956BzDCDVA1NSrsy3l2bdKHb_977L5VwXWpau8xpZHVWTh1-N8L8kLYBvmO7TTpPbZlH0puid9r1dWJ5Xnb376Bir98aQKyPUKwJ2QgV68kLejqik1jCCVkEggNPxQcAx8wO41BgyBaBjHp_APXfOIM:1xGhey:jrnFiWWy2OD6dbOpyem3Nplnytb7UvB5t-W2zc6Baqo",
+    "expire_date": "2026-10-27T18:55:36.827Z"
+  }
+},
+{
+  "model": "academy.academysettings",
+  "pk": 1,
+  "fields": {
+    "academy_name": "Radhhanand Sangeet Vidyalaya",
+    "tagline": "RHYTHM OF LIFE",
+    "teacher_name": "Guru JI NANDKISHOR DHORE",
+    "phone": "+91 98765 43210",
+    "email": "contact@radhhanand.org",
+    "address": "Radhhanand Sangeet Vidyalaya, India",
+    "whatsapp_number": "+91 98765 43210",
+    "attendance_threshold": 75.0,
+    "consecutive_absence_threshold": 3,
+    "currency_symbol": "₹",
+    "date_format": "YYYY-MM-DD",
+    "enable_fees": true,
+    "enable_late_status": false,
+    "default_class_duration": 60,
+    "updated_at": "2026-10-13T18:18:38.211Z"
+  }
+},
+{
+  "model": "academy.student",
+  "pk": 1,
+  "fields": {
+    "student_id": "TAL-2026-001",
+    "first_name": "Aarav",
+    "last_name": "Kulkarni",
+    "phone": "8999229714",
+    "email": "aarav.k@example.com",
+    "guardian_name": "Ramesh Kulkarni",
+    "guardian_phone": "8999229714",
+    "guardian_whatsapp": "8999229714",
+    "address": "",
+    "monthly_fee": "0.00",
+    "date_of_birth": null,
+    "enrollment_date": "2026-08-14",
+    "level": "beginner",
+    "status": "active",
+    "is_archived": false,
+    "whatsapp_opt_out": false,
+    "notes": "Attentive student. Good Daya clarity.",
+    "created_at": "2026-10-13T15:30:50.992Z",
+    "updated_at": "2026-10-13T19:18:50.530Z"
+  }
+},
+{
+  "model": "academy.student",
+  "pk": 2,
+  "fields": {
+    "student_id": "TAL-2026-002",
+    "first_name": "Meera",
+    "last_name": "Deshmukh",
+    "phone": "9822012345",
+    "email": "meera.d@example.com",
+    "guardian_name": "Anjali Deshmukh",
+    "guardian_phone": "9822012346",
+    "guardian_whatsapp": "8999229714",
+    "address": "",
+    "monthly_fee": "0.00",
+    "date_of_birth": null,
+    "enrollment_date": "2026-08-24",
+    "level": "beginner",
+    "status": "active",
+    "is_archived": false,
+    "whatsapp_opt_out": false,
+    "notes": "Fast learning curve in basic TeTe bols.",
+    "created_at": "2026-10-13T15:30:51.000Z",
+    "updated_at": "2026-10-13T19:19:11.142Z"
+  }
+},
+{
+  "model": "academy.student",
+  "pk": 3,
+  "fields": {
+    "student_id": "TAL-2026-003",
+    "first_name": "Rohan",
+    "last_name": "Patel",
+    "phone": "9811098765",
+    "email": "rohan.p@example.com",
+    "guardian_name": "",
+    "guardian_phone": "",
+    "guardian_whatsapp": "8999229714",
+    "address": "",
+    "monthly_fee": "0.00",
+    "date_of_birth": null,
+    "enrollment_date": "2026-09-03",
+    "level": "intermediate",
+    "status": "active",
+    "is_archived": false,
+    "whatsapp_opt_out": false,
+    "notes": "Preparing for Gandharva Praveshika examination.",
+    "created_at": "2026-10-13T15:30:51.007Z",
+    "updated_at": "2026-10-13T19:19:32.146Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 1,
+  "fields": {
+    "batch_id": "BAT-BEG-01",
+    "name": "SATURDAY BATCH 1 (5 TO 6)",
+    "course": "Tabla",
+    "description": "Foundational bols: Dha, Ge, Na, Ti, TeTe. Teentaal Kaydas.",
+    "level": "beginner",
+    "teacher_name": "Guru Ji",
+    "regular_day": "Saturday",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-08-14",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T15:30:50.977Z",
+    "updated_at": "2026-10-14T03:09:45.793Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 2,
+  "fields": {
+    "batch_id": "BAT-INT-01",
+    "name": "SUNDAY BATCH 2 (9 TO 11)",
+    "course": "Tabla",
+    "description": "Khanda and Rupak layakari, Relas and Farrukhabad Tukdas.",
+    "level": "intermediate",
+    "teacher_name": "Guru Ji",
+    "regular_day": "Sunday",
+    "start_time": "09:00:00",
+    "end_time": "11:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-08-29",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T15:30:50.985Z",
+    "updated_at": "2026-10-14T03:09:45.994Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 3,
+  "fields": {
+    "batch_id": "BAT-BEG-03",
+    "name": "TUESDAY BATCH 1 (5 TO 6)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "SMITISH KURVE",
+    "regular_day": "Tuesday",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-13",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T17:36:53.720Z",
+    "updated_at": "2026-10-14T03:09:45.524Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 4,
+  "fields": {
+    "batch_id": "BAT-BEG-04",
+    "name": "TUESDAY BATCH 2(6 TO 7)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "SMITISH KURVE",
+    "regular_day": "Tuesday",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-13",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T17:37:50.986Z",
+    "updated_at": "2026-10-14T03:09:45.560Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 5,
+  "fields": {
+    "batch_id": "BAT-BEG-05",
+    "name": "TUESDAY BATCH 3(7 TO 8)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "SMITISH KURVE",
+    "regular_day": "Tuesday",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-13",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T17:38:23.143Z",
+    "updated_at": "2026-10-14T03:09:45.593Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 6,
+  "fields": {
+    "batch_id": "BAT-BEG-06",
+    "name": "THURSDAY BATCH 1 (5 TO 6)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "SMITISH KURVE",
+    "regular_day": "Thursday",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-15",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T17:40:18.155Z",
+    "updated_at": "2026-10-14T03:09:45.635Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 7,
+  "fields": {
+    "batch_id": "BAT-BEG-07",
+    "name": "THURSDAY BATCH 2 (6 TO 7)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "SMITISH KURVE",
+    "regular_day": "Thursday",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-15",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T17:40:52.784Z",
+    "updated_at": "2026-10-14T03:09:45.698Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 8,
+  "fields": {
+    "batch_id": "BAT-BEG-08",
+    "name": "THURSDAY BATCH 3 (7 TO 8)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "SMITISH KURVE",
+    "regular_day": "Thursday",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-15",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-13T17:41:13.339Z",
+    "updated_at": "2026-10-14T03:09:45.745Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 9,
+  "fields": {
+    "batch_id": "BAT-BEG-09",
+    "name": "SATURDAY BATCH 2 (6 TO 7)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "",
+    "regular_day": "Saturday",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-14",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-14T03:09:45.865Z",
+    "updated_at": "2026-10-14T03:09:45.865Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 10,
+  "fields": {
+    "batch_id": "BAT-BEG-10",
+    "name": "SATURDAY BATCH 3 (7 TO 8)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "",
+    "regular_day": "Saturday",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-14",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-14T03:09:45.907Z",
+    "updated_at": "2026-10-14T03:09:45.907Z"
+  }
+},
+{
+  "model": "academy.batch",
+  "pk": 11,
+  "fields": {
+    "batch_id": "BAT-BEG-11",
+    "name": "SUNDAY BATCH 1 (8 TO 9)",
+    "course": "Tabla",
+    "description": "",
+    "level": "beginner",
+    "teacher_name": "",
+    "regular_day": "Sunday",
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "capacity": 15,
+    "monthly_fee": "0.00",
+    "start_date": "2026-10-14",
+    "end_date": null,
+    "is_active": true,
+    "is_archived": false,
+    "notes": "",
+    "created_at": "2026-10-14T03:09:45.950Z",
+    "updated_at": "2026-10-14T03:09:45.950Z"
+  }
+},
+{
+  "model": "academy.batchenrollment",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "batch": 1,
+    "enrolled_date": "2026-08-14",
+    "left_date": null,
+    "is_active": true
+  }
+},
+{
+  "model": "academy.batchenrollment",
+  "pk": 2,
+  "fields": {
+    "student": 2,
+    "batch": 1,
+    "enrolled_date": "2026-08-24",
+    "left_date": null,
+    "is_active": true
+  }
+},
+{
+  "model": "academy.batchenrollment",
+  "pk": 3,
+  "fields": {
+    "student": 3,
+    "batch": 2,
+    "enrolled_date": "2026-09-03",
+    "left_date": null,
+    "is_active": true
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 1,
+  "fields": {
+    "batch": 1,
+    "day_of_week": 5,
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.030Z",
+    "updated_at": "2026-10-14T03:09:45.817Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 2,
+  "fields": {
+    "batch": 2,
+    "day_of_week": 6,
+    "start_time": "09:00:00",
+    "end_time": "11:00:00",
+    "duration_minutes": 120,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.041Z",
+    "updated_at": "2026-10-14T03:09:46.020Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 3,
+  "fields": {
+    "batch": 6,
+    "day_of_week": 3,
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.050Z",
+    "updated_at": "2026-10-14T03:09:45.680Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 4,
+  "fields": {
+    "batch": 7,
+    "day_of_week": 3,
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.058Z",
+    "updated_at": "2026-10-14T03:09:45.725Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 5,
+  "fields": {
+    "batch": 8,
+    "day_of_week": 3,
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.067Z",
+    "updated_at": "2026-10-14T03:09:45.765Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 6,
+  "fields": {
+    "batch": 3,
+    "day_of_week": 1,
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.077Z",
+    "updated_at": "2026-10-14T03:09:45.543Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 7,
+  "fields": {
+    "batch": 4,
+    "day_of_week": 1,
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.087Z",
+    "updated_at": "2026-10-14T03:09:45.577Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 8,
+  "fields": {
+    "batch": 5,
+    "day_of_week": 1,
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-13T18:21:35.095Z",
+    "updated_at": "2026-10-14T03:09:45.615Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 9,
+  "fields": {
+    "batch": 9,
+    "day_of_week": 5,
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-14T03:09:45.887Z",
+    "updated_at": "2026-10-14T03:09:45.887Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 10,
+  "fields": {
+    "batch": 10,
+    "day_of_week": 5,
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-14T03:09:45.930Z",
+    "updated_at": "2026-10-14T03:09:45.930Z"
+  }
+},
+{
+  "model": "academy.batchrecurringschedule",
+  "pk": 11,
+  "fields": {
+    "batch": 11,
+    "day_of_week": 6,
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "duration_minutes": 60,
+    "is_active": true,
+    "created_at": "2026-10-14T03:09:45.971Z",
+    "updated_at": "2026-10-14T03:09:45.971Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 1,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": null,
+    "date": "2026-09-29",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "status": "conducted",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "Introduction to Delhi Kayda theme & first palta",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:51.051Z",
+    "updated_at": "2026-10-13T15:30:51.051Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 2,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": null,
+    "date": "2026-10-06",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "status": "conducted",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "Kayda Palte 2 & 3 with Tihai calculations",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:51.067Z",
+    "updated_at": "2026-10-13T15:30:51.067Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 3,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": null,
+    "date": "2026-10-13",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "status": "conducted",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "Dhire Dhire Rela speed transition",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:51.084Z",
+    "updated_at": "2026-10-13T19:09:47.937Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 4,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": 1,
+    "date": "2026-10-17",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.921Z",
+    "updated_at": "2026-10-13T18:25:46.921Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 5,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": 1,
+    "date": "2026-10-24",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.932Z",
+    "updated_at": "2026-10-13T18:25:46.932Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 6,
+  "fields": {
+    "batch": 2,
+    "schedule_rule": 2,
+    "date": "2026-10-18",
+    "start_time": "10:30:00",
+    "end_time": "11:45:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.942Z",
+    "updated_at": "2026-10-13T18:25:46.942Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 7,
+  "fields": {
+    "batch": 2,
+    "schedule_rule": 2,
+    "date": "2026-10-25",
+    "start_time": "10:30:00",
+    "end_time": "11:45:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.949Z",
+    "updated_at": "2026-10-13T18:25:46.949Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 8,
+  "fields": {
+    "batch": 6,
+    "schedule_rule": 3,
+    "date": "2026-10-15",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.957Z",
+    "updated_at": "2026-10-13T18:25:46.957Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 9,
+  "fields": {
+    "batch": 6,
+    "schedule_rule": 3,
+    "date": "2026-10-22",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.966Z",
+    "updated_at": "2026-10-13T18:25:46.966Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 10,
+  "fields": {
+    "batch": 7,
+    "schedule_rule": 4,
+    "date": "2026-10-15",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.974Z",
+    "updated_at": "2026-10-13T18:25:46.974Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 11,
+  "fields": {
+    "batch": 7,
+    "schedule_rule": 4,
+    "date": "2026-10-22",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.982Z",
+    "updated_at": "2026-10-13T18:25:46.982Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 12,
+  "fields": {
+    "batch": 8,
+    "schedule_rule": 5,
+    "date": "2026-10-15",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.990Z",
+    "updated_at": "2026-10-13T18:25:46.990Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 13,
+  "fields": {
+    "batch": 8,
+    "schedule_rule": 5,
+    "date": "2026-10-22",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:46.998Z",
+    "updated_at": "2026-10-13T18:25:46.998Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 14,
+  "fields": {
+    "batch": 3,
+    "schedule_rule": 6,
+    "date": "2026-10-13",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.009Z",
+    "updated_at": "2026-10-13T18:25:47.009Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 15,
+  "fields": {
+    "batch": 3,
+    "schedule_rule": 6,
+    "date": "2026-10-20",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.019Z",
+    "updated_at": "2026-10-13T18:25:47.019Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 16,
+  "fields": {
+    "batch": 3,
+    "schedule_rule": 6,
+    "date": "2026-10-27",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.028Z",
+    "updated_at": "2026-10-13T18:25:47.028Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 17,
+  "fields": {
+    "batch": 4,
+    "schedule_rule": 7,
+    "date": "2026-10-13",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.039Z",
+    "updated_at": "2026-10-13T18:25:47.039Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 18,
+  "fields": {
+    "batch": 4,
+    "schedule_rule": 7,
+    "date": "2026-10-20",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.046Z",
+    "updated_at": "2026-10-13T18:25:47.046Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 19,
+  "fields": {
+    "batch": 4,
+    "schedule_rule": 7,
+    "date": "2026-10-27",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.052Z",
+    "updated_at": "2026-10-13T18:25:47.053Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 20,
+  "fields": {
+    "batch": 5,
+    "schedule_rule": 8,
+    "date": "2026-10-13",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.061Z",
+    "updated_at": "2026-10-13T18:25:47.061Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 21,
+  "fields": {
+    "batch": 5,
+    "schedule_rule": 8,
+    "date": "2026-10-20",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.068Z",
+    "updated_at": "2026-10-13T18:25:47.068Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 22,
+  "fields": {
+    "batch": 5,
+    "schedule_rule": 8,
+    "date": "2026-10-27",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "conducted",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:25:47.076Z",
+    "updated_at": "2026-10-14T02:43:31.137Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 23,
+  "fields": {
+    "batch": 6,
+    "schedule_rule": null,
+    "date": "2026-10-14",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T02:43:07.325Z",
+    "updated_at": "2026-10-14T02:43:07.325Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 24,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": 1,
+    "date": "2026-10-17",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.057Z",
+    "updated_at": "2026-10-14T03:09:46.057Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 25,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": 1,
+    "date": "2026-10-24",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.086Z",
+    "updated_at": "2026-10-14T03:09:46.086Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 26,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": 1,
+    "date": "2026-10-31",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.108Z",
+    "updated_at": "2026-10-14T03:09:46.108Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 27,
+  "fields": {
+    "batch": 1,
+    "schedule_rule": 1,
+    "date": "2026-11-07",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.134Z",
+    "updated_at": "2026-10-14T03:09:46.134Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 28,
+  "fields": {
+    "batch": 9,
+    "schedule_rule": 9,
+    "date": "2026-10-17",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.160Z",
+    "updated_at": "2026-10-14T03:09:46.160Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 29,
+  "fields": {
+    "batch": 9,
+    "schedule_rule": 9,
+    "date": "2026-10-24",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.203Z",
+    "updated_at": "2026-10-14T03:09:46.203Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 30,
+  "fields": {
+    "batch": 9,
+    "schedule_rule": 9,
+    "date": "2026-10-31",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.228Z",
+    "updated_at": "2026-10-14T03:09:46.228Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 31,
+  "fields": {
+    "batch": 9,
+    "schedule_rule": 9,
+    "date": "2026-11-07",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.255Z",
+    "updated_at": "2026-10-14T03:09:46.255Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 32,
+  "fields": {
+    "batch": 10,
+    "schedule_rule": 10,
+    "date": "2026-10-17",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.284Z",
+    "updated_at": "2026-10-14T03:09:46.284Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 33,
+  "fields": {
+    "batch": 10,
+    "schedule_rule": 10,
+    "date": "2026-10-24",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.309Z",
+    "updated_at": "2026-10-14T03:09:46.309Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 34,
+  "fields": {
+    "batch": 10,
+    "schedule_rule": 10,
+    "date": "2026-10-31",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.334Z",
+    "updated_at": "2026-10-14T03:09:46.334Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 35,
+  "fields": {
+    "batch": 10,
+    "schedule_rule": 10,
+    "date": "2026-11-07",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.361Z",
+    "updated_at": "2026-10-14T03:09:46.361Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 36,
+  "fields": {
+    "batch": 11,
+    "schedule_rule": 11,
+    "date": "2026-10-18",
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.394Z",
+    "updated_at": "2026-10-14T03:09:46.394Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 37,
+  "fields": {
+    "batch": 11,
+    "schedule_rule": 11,
+    "date": "2026-10-25",
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.430Z",
+    "updated_at": "2026-10-14T03:09:46.430Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 38,
+  "fields": {
+    "batch": 11,
+    "schedule_rule": 11,
+    "date": "2026-11-01",
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.458Z",
+    "updated_at": "2026-10-14T03:09:46.458Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 39,
+  "fields": {
+    "batch": 11,
+    "schedule_rule": 11,
+    "date": "2026-11-08",
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.484Z",
+    "updated_at": "2026-10-14T03:09:46.484Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 40,
+  "fields": {
+    "batch": 2,
+    "schedule_rule": 2,
+    "date": "2026-10-18",
+    "start_time": "09:00:00",
+    "end_time": "11:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.514Z",
+    "updated_at": "2026-10-14T03:09:46.514Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 41,
+  "fields": {
+    "batch": 2,
+    "schedule_rule": 2,
+    "date": "2026-10-25",
+    "start_time": "09:00:00",
+    "end_time": "11:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.544Z",
+    "updated_at": "2026-10-14T03:09:46.544Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 42,
+  "fields": {
+    "batch": 2,
+    "schedule_rule": 2,
+    "date": "2026-11-01",
+    "start_time": "09:00:00",
+    "end_time": "11:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.568Z",
+    "updated_at": "2026-10-14T03:09:46.568Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 43,
+  "fields": {
+    "batch": 2,
+    "schedule_rule": 2,
+    "date": "2026-11-08",
+    "start_time": "09:00:00",
+    "end_time": "11:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.621Z",
+    "updated_at": "2026-10-14T03:09:46.621Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 44,
+  "fields": {
+    "batch": 6,
+    "schedule_rule": 3,
+    "date": "2026-10-29",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.655Z",
+    "updated_at": "2026-10-14T03:09:46.655Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 45,
+  "fields": {
+    "batch": 6,
+    "schedule_rule": 3,
+    "date": "2026-11-05",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.677Z",
+    "updated_at": "2026-10-14T03:09:46.677Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 46,
+  "fields": {
+    "batch": 6,
+    "schedule_rule": 3,
+    "date": "2026-11-12",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.705Z",
+    "updated_at": "2026-10-14T03:09:46.705Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 47,
+  "fields": {
+    "batch": 7,
+    "schedule_rule": 4,
+    "date": "2026-10-29",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.757Z",
+    "updated_at": "2026-10-14T03:09:46.757Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 48,
+  "fields": {
+    "batch": 7,
+    "schedule_rule": 4,
+    "date": "2026-11-05",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.833Z",
+    "updated_at": "2026-10-14T03:09:46.833Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 49,
+  "fields": {
+    "batch": 7,
+    "schedule_rule": 4,
+    "date": "2026-11-12",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.855Z",
+    "updated_at": "2026-10-14T03:09:46.855Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 50,
+  "fields": {
+    "batch": 8,
+    "schedule_rule": 5,
+    "date": "2026-10-29",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.887Z",
+    "updated_at": "2026-10-14T03:09:46.887Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 51,
+  "fields": {
+    "batch": 8,
+    "schedule_rule": 5,
+    "date": "2026-11-05",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.909Z",
+    "updated_at": "2026-10-14T03:09:46.910Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 52,
+  "fields": {
+    "batch": 8,
+    "schedule_rule": 5,
+    "date": "2026-11-12",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.932Z",
+    "updated_at": "2026-10-14T03:09:46.932Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 53,
+  "fields": {
+    "batch": 3,
+    "schedule_rule": 6,
+    "date": "2026-11-03",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.968Z",
+    "updated_at": "2026-10-14T03:09:46.968Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 54,
+  "fields": {
+    "batch": 3,
+    "schedule_rule": 6,
+    "date": "2026-11-10",
+    "start_time": "17:00:00",
+    "end_time": "18:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:46.992Z",
+    "updated_at": "2026-10-14T03:09:46.992Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 55,
+  "fields": {
+    "batch": 4,
+    "schedule_rule": 7,
+    "date": "2026-11-03",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:47.021Z",
+    "updated_at": "2026-10-14T03:09:47.021Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 56,
+  "fields": {
+    "batch": 4,
+    "schedule_rule": 7,
+    "date": "2026-11-10",
+    "start_time": "18:00:00",
+    "end_time": "19:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:47.044Z",
+    "updated_at": "2026-10-14T03:09:47.045Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 57,
+  "fields": {
+    "batch": 5,
+    "schedule_rule": 8,
+    "date": "2026-11-03",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:47.085Z",
+    "updated_at": "2026-10-14T03:09:47.085Z"
+  }
+},
+{
+  "model": "academy.classsession",
+  "pk": 58,
+  "fields": {
+    "batch": 5,
+    "schedule_rule": 8,
+    "date": "2026-11-10",
+    "start_time": "19:00:00",
+    "end_time": "20:00:00",
+    "status": "scheduled",
+    "cancellation_reason": "",
+    "is_rescheduled": false,
+    "original_date": null,
+    "original_start_time": null,
+    "reschedule_reason": "",
+    "lesson_topic": "",
+    "notes": "",
+    "created_at": "2026-10-14T03:09:47.109Z",
+    "updated_at": "2026-10-14T03:09:47.109Z"
+  }
+},
+{
+  "model": "academy.attendance",
+  "pk": 1,
+  "fields": {
+    "session": 1,
+    "student": 1,
+    "status": "present",
+    "remarks": "Crisp Nikas",
+    "marked_by": null,
+    "created_at": "2026-10-13T15:30:51.059Z",
+    "updated_at": "2026-10-13T15:30:51.059Z"
+  }
+},
+{
+  "model": "academy.attendance",
+  "pk": 2,
+  "fields": {
+    "session": 1,
+    "student": 2,
+    "status": "present",
+    "remarks": "Good steady hand",
+    "marked_by": null,
+    "created_at": "2026-10-13T15:30:51.061Z",
+    "updated_at": "2026-10-13T15:30:51.061Z"
+  }
+},
+{
+  "model": "academy.attendance",
+  "pk": 3,
+  "fields": {
+    "session": 2,
+    "student": 1,
+    "status": "present",
+    "remarks": "On tempo",
+    "marked_by": null,
+    "created_at": "2026-10-13T15:30:51.075Z",
+    "updated_at": "2026-10-13T15:30:51.075Z"
+  }
+},
+{
+  "model": "academy.attendance",
+  "pk": 4,
+  "fields": {
+    "session": 2,
+    "student": 2,
+    "status": "absent",
+    "remarks": "Informed beforehand",
+    "marked_by": null,
+    "created_at": "2026-10-13T15:30:51.078Z",
+    "updated_at": "2026-10-13T15:30:51.078Z"
+  }
+},
+{
+  "model": "academy.taal",
+  "pk": 1,
+  "fields": {
+    "name": "Teentaal",
+    "matras": 16,
+    "vibhag_structure": "4 + 4 + 4 + 4",
+    "tali_khali_info": "Tali on 1 (Sam), 5, 13; Khali on 9",
+    "theka_notation": "Dha Dhin Dhin Dha | Dha Dhin Dhin Dha | Dha Tin Tin Ta | Ta Dhin Dhin Dha",
+    "level": "beginner",
+    "notes": "The king of rhythmic cycles in North Indian classical music (Hindustani sangeet). Foundational for Riyaz and solo presentations.",
+    "reference_url": ""
+  }
+},
+{
+  "model": "academy.taal",
+  "pk": 2,
+  "fields": {
+    "name": "Jhaptaal",
+    "matras": 10,
+    "vibhag_structure": "2 + 3 + 2 + 3",
+    "tali_khali_info": "Tali on 1 (Sam), 3, 8; Khali on 6",
+    "theka_notation": "Dhi Na | Dhi Dhi Na | Ti Na | Dhi Dhi Na",
+    "level": "intermediate",
+    "notes": "Prominent 10-beat cycle with Khanda chhanda. Extensively used in vocal Khyal and classical solo.",
+    "reference_url": ""
+  }
+},
+{
+  "model": "academy.taal",
+  "pk": 3,
+  "fields": {
+    "name": "Ektaal",
+    "matras": 12,
+    "vibhag_structure": "2 + 2 + 2 + 2 + 2 + 2",
+    "tali_khali_info": "Tali on 1, 5, 9, 11; Khali on 3, 7",
+    "theka_notation": "Dhin Dhin | DhaGe Tirakita | Tu Na | Kat Ta | DhaGe Tirakita | Dhi Na",
+    "level": "intermediate",
+    "notes": "Symmetrical 12-beat taal popular for Vilambit (slow) and Drut (fast) khyal accompaniment as well as solo.",
+    "reference_url": ""
+  }
+},
+{
+  "model": "academy.taal",
+  "pk": 4,
+  "fields": {
+    "name": "Rupak",
+    "matras": 7,
+    "vibhag_structure": "3 + 2 + 2",
+    "tali_khali_info": "Khali on 1 (Sam treated as Khali/Tali convention); Tali on 4, 6",
+    "theka_notation": "Tin Tin Na | Dhi Na | Dhi Na",
+    "level": "intermediate",
+    "notes": "Unique cycle starting on Khali. Essential for vocal, sitar/sarod, and semi-classical accompaniment.",
+    "reference_url": ""
+  }
+},
+{
+  "model": "academy.taal",
+  "pk": 5,
+  "fields": {
+    "name": "Keharwa",
+    "matras": 8,
+    "vibhag_structure": "4 + 4",
+    "tali_khali_info": "Tali on 1 (Sam); Khali on 5",
+    "theka_notation": "Dha Ge Na Ti | Na Ka Dhi Na",
+    "level": "beginner",
+    "notes": "Very popular 8-beat taal for Bhajans, Ghazals, Folk music, and light classical accompaniment.",
+    "reference_url": ""
+  }
+},
+{
+  "model": "academy.taal",
+  "pk": 6,
+  "fields": {
+    "name": "Dadra",
+    "matras": 6,
+    "vibhag_structure": "3 + 3",
+    "tali_khali_info": "Tali on 1 (Sam); Khali on 4",
+    "theka_notation": "Dha Dhi Na | Dha Tu Na",
+    "level": "beginner",
+    "notes": "Lively 6-beat cycle common in Thumri, Dadra, and devotional music.",
+    "reference_url": ""
+  }
+},
+{
+  "model": "academy.composition",
+  "pk": 1,
+  "fields": {
+    "title": "Dha TeTe Dha TeTe DhaGeNaTi Basic Kayda (Delhi Gharana)",
+    "taal": 1,
+    "category": "kayda",
+    "difficulty": "beginner",
+    "bol_notation": "Theme (Mukh): \nDha Te Te Dha Te Te | Dha Ge Na Ti Ta Ke |\nTa Te Te Ta Te Te | Dha Ge Na Ti Dha Dha ||\n\nPalta 1 (Double Dha TeTe):\nDha Te Te Dha Te Te | Dha Te Te Dha Te Te |\nDha Te Te Dha Te Te | Dha Ge Na Ti Ta Ke |\nTa Te Te Ta Te Te | Ta Te Te Ta Te Te |\nDha Te Te Dha Te Te | Dha Ge Na Ti Dha Dha ||\n\nTihai:\nDha Te Te Dha Ge Na Ti | Dha - S - S |\nDha Te Te Dha Ge Na Ti | Dha - S - S |\nDha Te Te Dha Ge Na Ti | Dha (Sam) ||",
+    "recommended_tempo": "Vilambit to Madhya (80 - 120 BPM)",
+    "practice_instructions": "Ensure clear separation between Daya (Chanti) and Baya (Dagga). Keep TeTe crisp with middle and index finger.",
+    "reference_link": "",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:50.137Z",
+    "updated_at": "2026-10-13T15:30:50.137Z"
+  }
+},
+{
+  "model": "academy.composition",
+  "pk": 2,
+  "fields": {
+    "title": "Dhire Dhire Kitataka Delhi Rela",
+    "taal": 1,
+    "category": "rela",
+    "difficulty": "intermediate",
+    "bol_notation": "Dhi Re Dhi Re Ki Ta Ta Ka | Dhi Re Dhi Re Ki Ta Ta Ka |\nTi Re Ti Re Ki Ta Ta Ka | Dhi Re Dhi Re Ki Ta Ta Ka ||",
+    "recommended_tempo": "Madhya to Drut (160 - 240 BPM)",
+    "practice_instructions": "Focus on wrist balance and steady stamina. Gradually accelerate by 10 BPM increments.",
+    "reference_link": "",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:50.148Z",
+    "updated_at": "2026-10-13T15:30:50.148Z"
+  }
+},
+{
+  "model": "academy.composition",
+  "pk": 3,
+  "fields": {
+    "title": "Traditional Farrukhabad Tukda",
+    "taal": 1,
+    "category": "tukda",
+    "difficulty": "intermediate",
+    "bol_notation": "DhaGeTirakita DhaGeNaTi | KatTa GadiGhene Dha - |\nKatTa GadiGhene Dha - | KatTa GadiGhene Dha || (Sam)",
+    "recommended_tempo": "Madhya Laya (120 BPM)",
+    "practice_instructions": "Crisp Nikas on GadiGhene with distinct open bayan resonance.",
+    "reference_link": "",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:50.157Z",
+    "updated_at": "2026-10-13T15:30:50.157Z"
+  }
+},
+{
+  "model": "academy.composition",
+  "pk": 4,
+  "fields": {
+    "title": "Damdar Tihai in Teentaal",
+    "taal": 1,
+    "category": "tihai",
+    "difficulty": "beginner",
+    "bol_notation": "Dha Tit Ki Ta Tak Dha (S) | Dha Tit Ki Ta Tak Dha (S) | Dha Tit Ki Ta Tak Dha (Sam) ||",
+    "recommended_tempo": "Madhya Laya",
+    "practice_instructions": "Maintain exact rest (Dam) of 1 matra between the three phrases.",
+    "reference_link": "",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:50.164Z",
+    "updated_at": "2026-10-13T15:30:50.164Z"
+  }
+},
+{
+  "model": "academy.feeplan",
+  "pk": 1,
+  "fields": {
+    "name": "Monthly Regular (4 Sessions)",
+    "amount": "2500.00",
+    "billing_frequency": "monthly",
+    "description": "Standard monthly tuition",
+    "is_active": true
+  }
+},
+{
+  "model": "academy.feeplan",
+  "pk": 2,
+  "fields": {
+    "name": "TUESDAY BATCH 1 (5 TO 6)",
+    "amount": "1500.00",
+    "billing_frequency": "monthly",
+    "description": "",
+    "is_active": true
+  }
+},
+{
+  "model": "academy.paymentrecord",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "fee_plan": 1,
+    "amount_due": "2500.00",
+    "amount_paid": "2500.00",
+    "fee_month": 10,
+    "fee_year": 2026,
+    "billing_period": "October 2026",
+    "due_date": "2026-10-08",
+    "payment_date": "2026-10-07",
+    "payment_method": "upi",
+    "receipt_number": "REC-2026-001",
+    "transaction_reference": "",
+    "idempotency_key": "",
+    "is_reversed": false,
+    "reversal_reason": "",
+    "notes": "",
+    "created_at": "2026-10-13T15:30:51.045Z",
+    "updated_at": "2026-10-13T18:21:27.549Z"
+  }
+},
+{
+  "model": "academy.paymentrecord",
+  "pk": 2,
+  "fields": {
+    "student": 1,
+    "fee_plan": 2,
+    "amount_due": "0.00",
+    "amount_paid": "1500.00",
+    "fee_month": 10,
+    "fee_year": 2026,
+    "billing_period": "October 2026",
+    "due_date": null,
+    "payment_date": "2026-10-13",
+    "payment_method": "upi",
+    "receipt_number": "RSV-REC-2026-0003",
+    "transaction_reference": "",
+    "idempotency_key": "",
+    "is_reversed": false,
+    "reversal_reason": "",
+    "notes": "",
+    "created_at": "2026-10-13T18:02:25.445Z",
+    "updated_at": "2026-10-13T18:21:27.543Z"
+  }
+},
+{
+  "model": "academy.academyalert",
+  "pk": 1,
+  "fields": {
+    "alert_type": "attendance_low",
+    "title": "Low Attendance: Meera Deshmukh (50.0%)",
+    "message": "Meera Deshmukh has attended 1 of 2 eligible conducted classes (50.0%), falling below your threshold of 75.0%.",
+    "severity": "warning",
+    "link": "/students/2/",
+    "is_dismissed": true,
+    "created_at": "2026-10-13T17:26:04.523Z"
+  }
+},
+{
+  "model": "academy.academyalert",
+  "pk": 2,
+  "fields": {
+    "alert_type": "attendance_low",
+    "title": "Low Attendance: Meera Deshmukh (50.0%)",
+    "message": "Meera Deshmukh has attended 1 of 2 eligible conducted classes (50.0%), falling below your threshold of 75.0%.",
+    "severity": "warning",
+    "link": "/students/2/",
+    "is_dismissed": true,
+    "created_at": "2026-10-13T17:26:12.825Z"
+  }
+},
+{
+  "model": "academy.academyalert",
+  "pk": 3,
+  "fields": {
+    "alert_type": "attendance_low",
+    "title": "Low Attendance: Meera Deshmukh (50.0%)",
+    "message": "Meera Deshmukh has attended 1 of 2 eligible conducted classes (50.0%), falling below your threshold of 75.0%.",
+    "severity": "warning",
+    "link": "/students/2/",
+    "is_dismissed": false,
+    "created_at": "2026-10-13T17:33:56.335Z"
+  }
+},
+{
+  "model": "academy.academyalert",
+  "pk": 4,
+  "fields": {
+    "alert_type": "unrecorded_session",
+    "title": "Attendance pending for Beginner Riyaz Batch (Delhi Gharana) on 2026-10-13",
+    "message": "Session for batch 'Beginner Riyaz Batch (Delhi Gharana)' held on 2026-10-13 is marked conducted but attendance has not been saved.",
+    "severity": "warning",
+    "link": "/attendance/mark/3/",
+    "is_dismissed": false,
+    "created_at": "2026-10-13T19:11:29.495Z"
+  }
+},
+{
+  "model": "academy.academyalert",
+  "pk": 5,
+  "fields": {
+    "alert_type": "attendance_low",
+    "title": "Low Attendance: Aarav Kulkarni (66.7%)",
+    "message": "Aarav Kulkarni has attended 2 of 3 eligible conducted classes (66.7%), falling below your threshold of 75.0%.",
+    "severity": "warning",
+    "link": "/students/1/",
+    "is_dismissed": false,
+    "created_at": "2026-10-13T19:11:29.524Z"
+  }
+},
+{
+  "model": "academy.academyalert",
+  "pk": 6,
+  "fields": {
+    "alert_type": "attendance_low",
+    "title": "Low Attendance: Meera Deshmukh (33.3%)",
+    "message": "Meera Deshmukh has attended 1 of 3 eligible conducted classes (33.3%), falling below your threshold of 75.0%.",
+    "severity": "warning",
+    "link": "/students/2/",
+    "is_dismissed": false,
+    "created_at": "2026-10-13T19:11:29.548Z"
+  }
+},
+{
+  "model": "academy.academyalert",
+  "pk": 7,
+  "fields": {
+    "alert_type": "unrecorded_session",
+    "title": "Attendance pending for SATURDAY BATCH 1 (5 TO 6) on 2026-10-13",
+    "message": "Session for batch 'SATURDAY BATCH 1 (5 TO 6)' held on 2026-10-13 is marked conducted but attendance has not been saved.",
+    "severity": "warning",
+    "link": "/attendance/mark/3/",
+    "is_dismissed": false,
+    "created_at": "2026-10-14T03:19:31.450Z"
+  }
+},
+{
+  "model": "academy.whatsappmessagelog",
+  "pk": 1,
+  "fields": {
+    "student": null,
+    "session": null,
+    "payment": null,
+    "recipient_phone": "919876543210",
+    "recipient_name": "",
+    "message_type": "manual_alert",
+    "message_text": "Hello from Radhhanand Sangeet Vidyalaya",
+    "provider_message_id": "sim_20261013182558_3210",
+    "status": "simulated",
+    "error_details": "Logged in Test Mode (WhatsApp API credentials unconfigured or test mode active)",
+    "created_at": "2026-10-13T18:25:58.925Z"
+  }
+},
+{
+  "model": "academy.whatsappmessagelog",
+  "pk": 2,
+  "fields": {
+    "student": 2,
+    "session": 3,
+    "payment": null,
+    "recipient_phone": "919822012346",
+    "recipient_name": "Meera Deshmukh",
+    "message_type": "class_reminder",
+    "message_text": "Hello! This is Radhhanand Sangeet Vidyalaya.\n\nReminder: Your child's Beginner Riyaz Batch (Delhi Gharana) Tabla class is scheduled for today (13 October 2026) at 09:00 AM.\n\nPlease ensure regular riyaz before class. Contact the academy if you need any assistance.\n\nThank you!",
+    "provider_message_id": "sim_20261013182622_2346",
+    "status": "simulated",
+    "error_details": "Logged in Test Mode (WhatsApp API credentials unconfigured or test mode active)",
+    "created_at": "2026-10-13T18:26:22.313Z"
+  }
+},
+{
+  "model": "academy.whatsappmessagelog",
+  "pk": 3,
+  "fields": {
+    "student": 1,
+    "session": 3,
+    "payment": null,
+    "recipient_phone": "919876543211",
+    "recipient_name": "Aarav Kulkarni",
+    "message_type": "class_reminder",
+    "message_text": "Hello! This is Radhhanand Sangeet Vidyalaya.\n\nReminder: Your child's Beginner Riyaz Batch (Delhi Gharana) Tabla class is scheduled for today (13 October 2026) at 09:00 AM.\n\nPlease ensure regular riyaz before class. Contact the academy if you need any assistance.\n\nThank you!",
+    "provider_message_id": "sim_20261013182622_3211",
+    "status": "simulated",
+    "error_details": "Logged in Test Mode (WhatsApp API credentials unconfigured or test mode active)",
+    "created_at": "2026-10-13T18:26:22.321Z"
+  }
+},
+{
+  "model": "academy.whatsappmessagelog",
+  "pk": 4,
+  "fields": {
+    "student": 1,
+    "session": 52,
+    "payment": null,
+    "recipient_phone": "918999229714",
+    "recipient_name": "Aarav Kulkarni",
+    "message_type": "class_reminder",
+    "message_text": "Hello! This is Radhhanand Sangeet Vidyalaya.\n\nReminder: Your child's THURSDAY BATCH 3 (7 TO 8) Tabla class is scheduled for today (12 November 2026) at 07:00 PM.\n\nPlease ensure regular riyaz before class. Contact the academy if you need any assistance.\n\nThank you!",
+    "provider_message_id": "sim_20261014031538_9714",
+    "status": "simulated",
+    "error_details": "Logged in Test Mode (WhatsApp API credentials unconfigured or test mode active)",
+    "created_at": "2026-10-14T03:15:38.951Z"
+  }
+}
+]

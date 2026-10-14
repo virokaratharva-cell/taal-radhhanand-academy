@@ -1,0 +1,169 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Delete Batch: {{ batch.name }} — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Delete Batch Confirmation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="taal-card border-top border-4 {% if has_historical_records %}border-warning{% else %}border-danger{% endif %} shadow-sm">
+            
+            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <div class="rounded-circle d-flex align-items-center justify-content-center {% if has_historical_records %}bg-warning-subtle text-warning{% else %}bg-danger-subtle text-danger{% endif %}" style="width: 54px; height: 54px; font-size: 26px;">
+                    <i class="bi {% if has_historical_records %}bi-shield-exclamation{% else %}bi-exclamation-triangle-fill{% endif %}"></i>
+                </div>
+                <div>
+                    <h3 class="h4 fw-bold mb-1">
+                        {% if has_historical_records %}
+                        Historical Records Protection: Deletion Blocked
+                        {% else %}
+                        Confirm Permanent Batch Deletion
+                        {% endif %}
+                    </h3>
+                    <p class="text-muted small mb-0">Radhhanand Sangeet Vidyalaya &bull; Batch Management</p>
+                </div>
+            </div>
+
+            <!-- Batch Summary Box -->
+            <div class="p-3 bg-light rounded-3 border mb-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="badge bg-light text-dark font-monospace border">{{ batch.batch_id }}</span>
+                        <span class="badge bg-taal-primary ms-1">{{ batch.course }}</span>
+                        <h4 class="fw-bold mt-1 mb-0">{{ batch.name }}</h4>
+                    </div>
+                    <div>
+                        {% if batch.is_archived %}
+                        <span class="badge bg-secondary">Archived</span>
+                        {% elif batch.is_active %}
+                        <span class="badge-status active">Active</span>
+                        {% else %}
+                        <span class="badge-status discontinued">Inactive</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row g-2 small text-muted mt-2">
+                    <div class="col-sm-6">
+                        <i class="bi bi-calendar-event me-1"></i> <strong>Day:</strong> {{ batch.regular_day }}
+                    </div>
+                    <div class="col-sm-6">
+                        <i class="bi bi-clock me-1"></i> <strong>Time:</strong> {{ batch.start_time|time:"g:i A" }} &ndash; {{ batch.end_time|time:"g:i A" }}
+                    </div>
+                    <div class="col-sm-6">
+                        <i class="bi bi-person-badge me-1"></i> <strong>Guru / Teacher:</strong> {{ batch.teacher_name|default:academy_settings.teacher_name }}
+                    </div>
+                    <div class="col-sm-6">
+                        <i class="bi bi-mortarboard me-1"></i> <strong>Level:</strong> {{ batch.get_level_display }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Record Linkage Impact Audit -->
+            <h5 class="fw-bold mb-3" style="font-size: 15px;"><i class="bi bi-diagram-2 text-primary me-1"></i> Associated Records Impact Audit</h5>
+            
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-sm-4">
+                    <div class="p-2 border rounded text-center {% if conducted_count > 0 %}bg-danger-subtle border-danger text-danger{% else %}bg-white{% endif %}">
+                        <div class="fs-4 fw-bold">{{ conducted_count }}</div>
+                        <div class="small fw-semibold">Conducted Classes</div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <div class="p-2 border rounded text-center {% if attendance_count > 0 %}bg-danger-subtle border-danger text-danger{% else %}bg-white{% endif %}">
+                        <div class="fs-4 fw-bold">{{ attendance_count }}</div>
+                        <div class="small fw-semibold">Attendance Logs</div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <div class="p-2 border rounded text-center {% if lessons_count > 0 %}bg-danger-subtle border-danger text-danger{% else %}bg-white{% endif %}">
+                        <div class="fs-4 fw-bold">{{ lessons_count }}</div>
+                        <div class="small fw-semibold">Lesson Diaries</div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <div class="p-2 border rounded text-center bg-white">
+                        <div class="fs-4 fw-bold text-dark">{{ active_enrollments_count }}</div>
+                        <div class="small text-muted">Active Students</div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <div class="p-2 border rounded text-center bg-white">
+                        <div class="fs-4 fw-bold text-dark">{{ scheduled_sessions_count }}</div>
+                        <div class="small text-muted">Scheduled Future Classes</div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <div class="p-2 border rounded text-center bg-white">
+                        <div class="fs-4 fw-bold text-dark">{{ recurring_rules_count }}</div>
+                        <div class="small text-muted">Timetable Rules</div>
+                    </div>
+                </div>
+            </div>
+
+            {% if has_historical_records %}
+            <!-- Deletion Blocked Notice -->
+            <div class="alert alert-warning border-start border-4 border-warning mb-4">
+                <h5 class="alert-heading fw-bold fs-6"><i class="bi bi-shield-lock-fill me-1"></i> Cannot Delete: Preserving Student History</h5>
+                <p class="small mb-2">
+                    This batch has recorded attendance (<strong>{{ attendance_count }}</strong> logs), conducted sessions (<strong>{{ conducted_count }}</strong> classes), or recorded lesson diaries (<strong>{{ lessons_count }}</strong> lessons).
+                </p>
+                <p class="small mb-0">
+                    Deleting this batch would permanently erase or corrupt these historical academic and attendance records for your students. To protect your academy's data integrity, direct deletion is blocked.
+                </p>
+            </div>
+
+            <div class="card bg-light border-0 p-3 mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-archive-fill text-primary fs-3"></i>
+                    <div>
+                        <div class="fw-bold">Recommended Safe Option: Archive Batch</div>
+                        <div class="small text-muted">Archiving removes the batch from active timetables and daily lists while safely preserving every attendance record, student enrollment history, and past lesson.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 justify-content-between">
+                <a href="{% url 'batch_detail' batch.id %}" class="btn btn-taal-outline">
+                    <i class="bi bi-arrow-left"></i> Cancel and Return
+                </a>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'batch_archive_toggle' batch.id %}" class="btn btn-warning">
+                        <i class="bi bi-archive"></i> Archive Batch Instead
+                    </a>
+                </div>
+            </div>
+
+            {% else %}
+            <!-- Safe to Delete Form -->
+            <div class="alert alert-danger border-start border-4 border-danger mb-4">
+                <h5 class="alert-heading fw-bold fs-6"><i class="bi bi-exclamation-triangle-fill me-1"></i> Warning: Permanent Action</h5>
+                <p class="small mb-1">
+                    Are you sure you want to permanently delete batch <strong>"{{ batch.name }}"</strong>?
+                </p>
+                <p class="small mb-0">
+                    This batch has no conducted classes or historical attendance records. Any future scheduled classes (<strong>{{ scheduled_sessions_count }}</strong>) and timetable rules (<strong>{{ recurring_rules_count }}</strong>) will be removed. This action cannot be undone.
+                </p>
+            </div>
+
+            <form method="POST" action="{% url 'batch_delete' batch.id %}" class="mt-4">
+                {% csrf_token %}
+                <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                    <a href="{% url 'batch_detail' batch.id %}" class="btn btn-taal-outline">
+                        <i class="bi bi-arrow-left"></i> Cancel
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'batch_archive_toggle' batch.id %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-archive"></i> Archive Instead
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash-fill"></i> Yes, Permanently Delete Batch
+                        </button>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

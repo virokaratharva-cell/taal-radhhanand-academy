@@ -1,0 +1,89 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}{{ title }} — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-7">
+        <div class="taal-card">
+            <div class="taal-card-header d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h3 class="taal-card-title mb-1"><i class="bi bi-clock-history text-warning"></i> {{ title }}</h3>
+                    <p class="text-muted small mb-0">Reschedule this individual session while preserving original records and attendance history.</p>
+                </div>
+                <a href="{% url 'session_list' %}" class="btn btn-sm btn-taal-outline">
+                    <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+            </div>
+
+            <!-- Current Session Info Card -->
+            <div class="p-3 bg-light rounded border mb-4">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <span class="small text-muted text-uppercase">Batch:</span>
+                        <div class="fw-bold text-dark">{{ session.batch.name }} ({{ session.batch.course }})</div>
+                    </div>
+                    <div class="col-6">
+                        <span class="small text-muted text-uppercase">Instructor:</span>
+                        <div class="fw-semibold text-dark">{{ session.batch.instructor_name|default:"Academy Guru" }}</div>
+                    </div>
+                    <div class="col-6">
+                        <span class="small text-muted text-uppercase">Currently Scheduled Date:</span>
+                        <div class="fw-semibold text-dark">{{ session.date|date:"D, d M Y" }}</div>
+                    </div>
+                    <div class="col-6">
+                        <span class="small text-muted text-uppercase">Currently Scheduled Time:</span>
+                        <div class="fw-semibold text-dark">{{ session.start_time|time:"g:i A" }} &ndash; {{ session.end_time|time:"g:i A" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                    {% for error in form.non_field_errors %}
+                    <div><i class="bi bi-exclamation-circle me-1"></i> {{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">New Session Date *</label>
+                    {{ form.date }}
+                    {% if form.date.errors %}<div class="text-danger small mt-1">{{ form.date.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold">New Start Time *</label>
+                        {{ form.start_time }}
+                        {% if form.start_time.errors %}<div class="text-danger small mt-1">{{ form.start_time.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold">New End Time *</label>
+                        {{ form.end_time }}
+                        {% if form.end_time.errors %}<div class="text-danger small mt-1">{{ form.end_time.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Reason for Rescheduling *</label>
+                    {{ form.reschedule_reason }}
+                    <div class="form-text small">Explain why the class was shifted (e.g., Festival holiday, teacher festival performance, hall maintenance).</div>
+                    {% if form.reschedule_reason.errors %}<div class="text-danger small mt-1">{{ form.reschedule_reason.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a href="{% url 'session_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-taal-primary px-4">
+                        <i class="bi bi-check-lg"></i> Confirm Rescheduling
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Class Schedule — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Class Schedule & Timetable{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-calendar3 text-warning"></i> Class Timetable & Sessions</h3>
+            <p class="text-muted small mb-0">Manage automatic recurring sessions, reschedule classes, and mark attendance.</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#generateSessionsModal">
+                <i class="bi bi-arrow-repeat"></i> Generate Upcoming Classes
+            </button>
+            <a href="{% url 'session_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> One-Time Extra Class
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border">
+        <div class="col-12 col-md-4">
+            <select name="batch" class="form-select form-select-sm">
+                <option value="">-- All Batches --</option>
+                {% for b in batches %}
+                <option value="{{ b.id }}" {% if batch_filter == b.id|stringformat:"i" %}selected{% endif %}>{{ b.name }} ({{ b.course }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <select name="status" class="form-select form-select-sm">
+                <option value="">-- All Statuses --</option>
+                <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                <option value="conducted" {% if status_filter == 'conducted' %}selected{% endif %}>Conducted</option>
+                <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <input type="month" name="month" value="{{ month_filter }}" class="form-control form-control-sm" title="Filter by Month">
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-taal-primary w-100">Filter</button>
+            {% if batch_filter or status_filter or month_filter %}
+            <a href="{% url 'session_list' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-circle"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Sessions List Table -->
+    {% if page_obj.object_list %}
+    <div class="taal-table-responsive">
+        <table class="taal-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Batch</th>
+                    <th>Status</th>
+                    <th>Topic / Notes</th>
+                    <th>Attendance</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sess in page_obj.object_list %}
+                <tr>
+                    <td>
+                        <strong>{{ sess.date|date:"D, d M Y" }}</strong>
+                        {% if sess.date == today %}<span class="badge bg-warning-subtle text-warning-emphasis border ms-1">Today</span>{% endif %}
+                        {% if sess.is_rescheduled %}
+                        <div class="small text-info mt-1">
+                            <i class="bi bi-arrow-left-right"></i> Rescheduled from {{ sess.original_date|date:"d M" }}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div>{{ sess.start_time|time:"g:i A" }} &ndash; {{ sess.end_time|time:"g:i A" }}</div>
+                        <div class="small text-muted">{{ sess.duration_minutes }} mins</div>
+                    </td>
+                    <td>
+                        <a href="{% url 'batch_detail' sess.batch.id %}" class="text-decoration-none"><strong>{{ sess.batch.name }}</strong></a>
+                        <div class="small text-muted">{{ sess.batch.course }}</div>
+                    </td>
+                    <td>
+                        <span class="badge-status {{ sess.status }}">{{ sess.get_status_display }}</span>
+                    </td>
+                    <td>
+                        {% if sess.status == 'cancelled' %}
+                        <span class="text-danger small"><strong>Cancelled:</strong> {{ sess.cancellation_reason|default:"No reason stated" }}</span>
+                        {% elif sess.is_rescheduled %}
+                        <span class="text-muted small"><strong>Reason:</strong> {{ sess.reschedule_reason|default:sess.lesson_topic|default:"--" }}</span>
+                        {% else %}
+                        <span>{{ sess.lesson_topic|default:"--" }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sess.status == 'conducted' %}
+                            {% if sess.is_attendance_saved %}
+                            <span class="badge bg-success-subtle text-success border"><i class="bi bi-check-circle"></i> Saved ({{ sess.attendance_count }})</span>
+                            {% else %}
+                            <span class="badge bg-warning-subtle text-warning border"><i class="bi bi-exclamation-circle"></i> Not Saved</span>
+                            {% endif %}
+                        {% elif sess.status == 'cancelled' %}
+                            <span class="text-muted small">Exempted</span>
+                        {% else %}
+                            <span class="text-muted small">Pending Conduct</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm">
+                            {% if sess.status == 'conducted' %}
+                            <a href="{% url 'attendance_mark' sess.id %}" class="btn btn-taal-primary py-0 px-2" style="font-size: 11px;" title="Record Attendance">
+                                <i class="bi bi-check2-square"></i> {% if sess.is_attendance_saved %}Edit Att.{% else %}Mark Att.{% endif %}
+                            </a>
+                            {% elif sess.status == 'scheduled' %}
+                            <a href="{% url 'session_mark_conducted' sess.id %}" class="btn btn-taal-maroon py-0 px-2" style="font-size: 11px;" title="Mark Conducted">
+                                <i class="bi bi-play-circle"></i> Conduct
+                            </a>
+                            <a href="{% url 'session_reschedule' sess.id %}" class="btn btn-outline-secondary py-0 px-2" style="font-size: 11px;" title="Reschedule Session">
+                                <i class="bi bi-clock-history"></i>
+                            </a>
+                            <a href="{% url 'whatsapp_send_reminder' sess.id %}" class="btn btn-outline-success py-0 px-2" style="font-size: 11px;" title="Send WhatsApp Reminder">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'session_edit' sess.id %}" class="btn btn-taal-outline py-0 px-2" style="font-size: 11px;" title="Edit Details">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} sessions</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&batch={{ batch_filter }}&status={{ status_filter }}&month={{ month_filter }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&batch={{ batch_filter }}&status={{ status_filter }}&month={{ month_filter }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-calendar-x"></i></div>
+        <div class="empty-state-title">No Class Sessions Found</div>
+        <div class="empty-state-text">No scheduled or conducted classes matched the selected filters.</div>
+        <div class="d-flex justify-content-center gap-2 mt-3">
+            <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#generateSessionsModal">
+                <i class="bi bi-arrow-repeat"></i> Generate From Recurring Rules
+            </button>
+            <a href="{% url 'session_create' %}" class="btn btn-sm btn-taal-primary"><i class="bi bi-calendar-plus"></i> Schedule Extra Class</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal: Generate Upcoming Sessions -->
+<div class="modal fade" id="generateSessionsModal" tabindex="-1" aria-labelledby="generateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'sessions_generate' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="generateModalLabel"><i class="bi bi-calendar-plus text-primary"></i> Generate Upcoming Class Timetable</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="small text-muted mb-3">
+                        This generator evaluates recurring timetable rules (e.g. Tuesday, Thursday, Saturday 5-8 PM & Sunday morning) and creates upcoming class sessions automatically.
+                    </p>
+                    <div class="alert alert-info py-2 small mb-3">
+                        <i class="bi bi-shield-check me-1"></i> <strong>Safe & Idempotent:</strong> Existing classes, modified dates, and past attendance are never overwritten or duplicated.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Target Batch</label>
+                        <select name="batch_id" class="form-select form-select-sm">
+                            <option value="">-- All Active Batches --</option>
+                            {% for b in batches %}
+                            <option value="{{ b.id }}">{{ b.name }} ({{ b.course }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Planning Horizon (Days into future)</label>
+                        <select name="days" class="form-select form-select-sm">
+                            <option value="30">Next 30 Days (1 Month)</option>
+                            <option value="60" selected>Next 60 Days (2 Months - Recommended)</option>
+                            <option value="90">Next 90 Days (Quarter)</option>
+                            <option value="180">Next 180 Days (Half Year)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-taal-primary btn-sm"><i class="bi bi-play-circle"></i> Run Schedule Generation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

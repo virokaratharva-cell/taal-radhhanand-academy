@@ -1,0 +1,137 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Practice Assignments — TAAL{% endblock %}
+{% block page_title %}Homework & Practice Assignments{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-card-checklist text-warning"></i> Riyaz & Practice Tasks</h3>
+            <p class="text-muted small mb-0">Assign compositions, track due dates, and record review feedback.</p>
+        </div>
+        <div>
+            <a href="{% url 'assignment_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Create Practice Assignment
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border">
+        <div class="col-12 col-md-3">
+            <select name="status" class="form-select form-select-sm">
+                <option value="">-- All Statuses --</option>
+                <option value="assigned" {% if status_filter == 'assigned' %}selected{% endif %}>Assigned</option>
+                <option value="reviewed" {% if status_filter == 'reviewed' %}selected{% endif %}>Reviewed</option>
+                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="needs_practice" {% if status_filter == 'needs_practice' %}selected{% endif %}>Needs More Practice</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <select name="batch" class="form-select form-select-sm">
+                <option value="">-- All Batches --</option>
+                {% for b in batches %}
+                <option value="{{ b.id }}" {% if batch_filter == b.id|stringformat:"i" %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-4">
+            <select name="student" class="form-select form-select-sm">
+                <option value="">-- All Students --</option>
+                {% for st in students %}
+                <option value="{{ st.id }}" {% if student_filter == st.id|stringformat:"i" %}selected{% endif %}>{{ st.full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-dark w-100">Filter</button>
+            {% if status_filter or batch_filter or student_filter %}
+            <a href="{% url 'assignment_list' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-circle"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Table -->
+    {% if page_obj.object_list %}
+    <div class="taal-table-responsive">
+        <table class="taal-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Target Student / Batch</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Target Tempo</th>
+                    <th>Duration</th>
+                    <th class="text-end">Review / Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in page_obj.object_list %}
+                <tr>
+                    <td>
+                        <strong><a href="{% url 'assignment_edit' a.id %}">{{ a.title }}</a></strong>
+                        {% if a.taal %}<span class="badge bg-light text-muted border ms-1">{{ a.taal.name }}</span>{% endif %}
+                    </td>
+                    <td>
+                        {% if a.student %}
+                        <a href="{% url 'student_detail' a.student.id %}">{{ a.student.full_name }}</a>
+                        {% elif a.batch %}
+                        <a href="{% url 'batch_detail' a.batch.id %}">Batch: {{ a.batch.name }}</a>
+                        {% else %}
+                        <span class="text-muted">General</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ a.due_date|date:"D, d M Y" }}
+                        {% if a.is_overdue %}
+                        <span class="badge bg-danger ms-1">Overdue</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {% if a.status == 'completed' %}bg-success{% elif a.status == 'needs_practice' %}bg-warning text-dark{% elif a.status == 'reviewed' %}bg-info text-dark{% else %}bg-secondary{% endif %}">
+                            {{ a.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ a.target_tempo|default:"--" }}</td>
+                    <td>{{ a.recommended_practice_duration|default:"--" }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'assignment_edit' a.id %}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">
+                            <i class="bi bi-pencil-square"></i> Review
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} assignments</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}&batch={{ batch_filter }}&student={{ student_filter }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}&batch={{ batch_filter }}&student={{ student_filter }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-card-checklist"></i></div>
+        <div class="empty-state-title">No Assignments Found</div>
+        <div class="empty-state-text">Assign practice tasks or homework to individual students or an entire batch.</div>
+        <a href="{% url 'assignment_create' %}" class="btn btn-taal-primary"><i class="bi bi-plus-lg"></i> Create First Assignment</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

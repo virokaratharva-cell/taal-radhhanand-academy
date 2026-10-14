@@ -1,0 +1,38 @@
+{
+  "name": "Radhhanand Sangeet Vidyalaya",
+  "short_name": "Radhhanand",
+  "description": "Tabla & Music Academy Management System — Batches, Timetables, Attendance, Fees & WhatsApp",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FBF8F3",
+  "theme_color": "#7A1C2C",
+  "orientation": "portrait-primary",
+  "categories": ["education", "music", "productivity"],
+  "icons": [
+    {
+      "src": "/static/academy/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/academy/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/academy/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/academy/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

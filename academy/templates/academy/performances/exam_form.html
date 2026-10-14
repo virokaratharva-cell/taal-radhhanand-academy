@@ -1,0 +1,79 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}{{ title }} — TAAL{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="taal-card">
+            <div class="taal-card-header">
+                <h3 class="taal-card-title"><i class="bi bi-award text-warning"></i> {{ title }}</h3>
+                <a href="{% url 'exam_list' %}" class="btn btn-sm btn-taal-outline"><i class="bi bi-arrow-left"></i> Back to Exams</a>
+            </div>
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Student *</label>
+                        {{ form.student }}
+                        {% if form.student.errors %}<div class="text-danger small">{{ form.student.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Examination Date *</label>
+                        {{ form.exam_date }}
+                        {% if form.exam_date.errors %}<div class="text-danger small">{{ form.exam_date.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Exam Title (e.g. Praveshika Pratham) *</label>
+                        {{ form.exam_name }}
+                        {% if form.exam_name.errors %}<div class="text-danger small">{{ form.exam_name.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Examining Board / University</label>
+                        {{ form.exam_board }}
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Theory Preparation / Marks</label>
+                        {{ form.theory_progress }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Practical / Riyaz Progress</label>
+                        {{ form.practical_progress }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Result / Mock Score</label>
+                        {{ form.mock_result }}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Teacher Remarks / External Examiner Feedback</label>
+                    {{ form.teacher_remarks }}
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a href="{% url 'exam_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-taal-primary px-4"><i class="bi bi-check-lg"></i> Save Examination Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

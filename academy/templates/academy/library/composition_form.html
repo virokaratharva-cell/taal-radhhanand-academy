@@ -1,0 +1,86 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}{{ title }} — TAAL{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="taal-card">
+            <div class="taal-card-header">
+                <h3 class="taal-card-title"><i class="bi bi-music-note-beamed text-warning"></i> {{ title }}</h3>
+                <a href="{% url 'composition_list' %}" class="btn btn-sm btn-taal-outline"><i class="bi bi-arrow-left"></i> Back to Compositions</a>
+            </div>
+
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger py-2 small mb-3">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Composition Title *</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}<div class="text-danger small">{{ form.title.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Taal Cycle *</label>
+                        {{ form.taal }}
+                        {% if form.taal.errors %}<div class="text-danger small">{{ form.taal.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Repertoire Category *</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}<div class="text-danger small">{{ form.category.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold">Difficulty Level</label>
+                        {{ form.difficulty }}
+                        {% if form.difficulty.errors %}<div class="text-danger small">{{ form.difficulty.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Bol Notation / Layout *</label>
+                    {{ form.bol_notation }}
+                    <small class="text-muted d-block mt-1">Include Theme, Paltas, and Tihai where applicable.</small>
+                    {% if form.bol_notation.errors %}<div class="text-danger small">{{ form.bol_notation.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Recommended Tempo / Laya (BPM)</label>
+                        {{ form.recommended_tempo }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label small fw-semibold">Audio / Video Demonstration URL</label>
+                        {{ form.reference_link }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Practice Instructions / Nikas Focus</label>
+                    {{ form.practice_instructions }}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Internal Notes / Gharana Tradition</label>
+                    {{ form.notes }}
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a href="{% url 'composition_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-taal-primary px-4"><i class="bi bi-check-lg"></i> Save Composition</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

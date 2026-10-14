@@ -1,0 +1,195 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}WhatsApp Center — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}WhatsApp Communication Hub{% endblock %}
+
+{% block content %}
+<div class="taal-card mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-whatsapp text-success"></i> WhatsApp Business & Notifications</h3>
+            <p class="text-muted small mb-0">Official automated messaging for class reminders, payment receipts, and parent queries &bull; Radhhanand Sangeet Vidyalaya.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'whatsapp_simulator' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-chat-dots"></i> Chatbot Simulator
+            </a>
+        </div>
+    </div>
+
+    <!-- Integration Status Banner -->
+    <div class="p-3 rounded border mb-4 {% if test_mode or not has_token %}bg-warning-subtle border-warning-subtle{% else %}bg-success-subtle border-success-subtle{% endif %}">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+            <div class="d-flex align-items-center gap-2">
+                {% if test_mode or not has_token %}
+                <span class="badge bg-warning text-dark px-2 py-1"><i class="bi bi-shield-exclamation"></i> TEST MODE ACTIVE</span>
+                <span class="small text-dark">
+                    Messages are simulated and safely logged to the database. Live Meta API requests are skipped.
+                </span>
+                {% else %}
+                <span class="badge bg-success text-white px-2 py-1"><i class="bi bi-shield-check"></i> LIVE CLOUD API CONNECTED</span>
+                <span class="small text-dark">
+                    Connected to Meta Cloud API (Phone ID: <code>{{ phone_number_id }}</code>, API {{ api_version }}).
+                </span>
+                {% endif %}
+            </div>
+            <div class="small text-muted">
+                Mode toggle via <code>WHATSAPP_TEST_MODE</code> in settings
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Scheduled Classes & Instant Reminder Dispatch -->
+    <div class="mb-4">
+        <h5 class="fw-bold mb-3 brand-font"><i class="bi bi-bell-fill text-warning"></i> Today's Class Reminders</h5>
+        {% if today_sessions %}
+        <div class="taal-table-responsive">
+            <table class="taal-table">
+                <thead>
+                    <tr>
+                        <th>Batch</th>
+                        <th>Course</th>
+                        <th>Timing</th>
+                        <th>Instructor</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sess in today_sessions %}
+                    <tr>
+                        <td><strong><a href="{% url 'batch_detail' sess.batch.id %}" class="text-decoration-none text-dark">{{ sess.batch.name }}</a></strong></td>
+                        <td><span class="badge bg-taal-primary">{{ sess.batch.course }}</span></td>
+                        <td>{{ sess.start_time|time:"g:i A" }} &ndash; {{ sess.end_time|time:"g:i A" }}</td>
+                        <td>{{ sess.batch.teacher_name|default:academy_settings.teacher_name }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'whatsapp_send_reminder' sess.id %}" class="btn btn-sm btn-success py-1 px-3">
+                                <i class="bi bi-whatsapp"></i> Send Reminders
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-3 bg-light rounded border text-muted small">
+            <i class="bi bi-info-circle me-1"></i> No scheduled classes remaining today requiring reminders.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Message Delivery Logs Table -->
+    <div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+            <h5 class="fw-bold mb-0 brand-font">Message Delivery Logs</h5>
+
+            <!-- Filter Tabs -->
+            <div class="d-flex gap-2">
+                <form method="GET" class="d-flex gap-2">
+                    <select name="type" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Message Types</option>
+                        <option value="reminder" {% if type_filter == 'reminder' %}selected{% endif %}>Class Reminders</option>
+                        <option value="receipt" {% if type_filter == 'receipt' %}selected{% endif %}>Fee Receipts</option>
+                        <option value="chatbot" {% if type_filter == 'chatbot' %}selected{% endif %}>Chatbot Replies</option>
+                        <option value="otp" {% if type_filter == 'otp' %}selected{% endif %}>OTP Verification</option>
+                    </select>
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        <option value="sent" {% if status_filter == 'sent' %}selected{% endif %}>Sent</option>
+                        <option value="simulated" {% if status_filter == 'simulated' %}selected{% endif %}>Simulated</option>
+                        <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        {% if page_obj %}
+        <div class="taal-table-responsive">
+            <table class="taal-table small">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Recipient</th>
+                        <th>Student</th>
+                        <th>Status</th>
+                        <th>Message Preview</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in page_obj %}
+                    <tr>
+                        <td class="text-nowrap">{{ log.created_at|date:"d M H:i" }}</td>
+                        <td>
+                            <span class="badge bg-light text-dark border text-uppercase" style="font-size: 10px;">
+                                {{ log.get_message_type_display }}
+                            </span>
+                        </td>
+                        <td class="font-monospace">{{ log.recipient_phone }}</td>
+                        <td>
+                            {% if log.student %}
+                            <a href="{% url 'student_detail' log.student.id %}" class="text-decoration-none text-dark fw-semibold">
+                                {{ log.student.full_name }}
+                            </a>
+                            {% else %}
+                            <span class="text-muted">--</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.status == 'sent' %}
+                            <span class="badge bg-success-subtle text-success border">Sent</span>
+                            {% elif log.status == 'simulated' %}
+                            <span class="badge bg-info-subtle text-info border">Simulated</span>
+                            {% elif log.status == 'failed' %}
+                            <span class="badge bg-danger-subtle text-danger border" title="{{ log.error_message }}">Failed</span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary border">{{ log.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="text-muted" title="{{ log.message_text }}">
+                                {{ log.message_text|truncatechars:50 }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            {% if log.status == 'failed' %}
+                            <a href="{% url 'whatsapp_retry_log' log.id %}" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 11px;">
+                                <i class="bi bi-arrow-clockwise"></i> Retry
+                            </a>
+                            {% else %}
+                            <span class="text-muted">&ndash;</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+            <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} logs</div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a></li>
+                    {% endif %}
+                    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="p-4 bg-light rounded border text-center text-muted small">
+            No WhatsApp messages dispatched yet. Use the reminders or receipt tools to send automated updates.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

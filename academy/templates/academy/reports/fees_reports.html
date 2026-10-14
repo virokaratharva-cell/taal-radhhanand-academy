@@ -1,0 +1,181 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Fees & Financial Reports — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Fees & Financial Reports{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-cash-stack text-warning"></i> Tuition Fees & Financial Analytics</h3>
+            <p class="text-muted small mb-0">Period: <strong>{{ data.start_date|date:"d M Y" }}</strong> to <strong>{{ data.end_date|date:"d M Y" }}</strong> &bull; Radhhanand Sangeet Vidyalaya</p>
+        </div>
+        <div class="d-flex gap-2 no-print">
+            <a href="{% url 'reports_attendance' %}" class="btn btn-taal-outline btn-sm">Attendance</a>
+            <a href="{% url 'fees_reports' %}" class="btn btn-taal-primary btn-sm">Fee Reports</a>
+            <a href="{% url 'timetable_reports' %}" class="btn btn-taal-outline btn-sm">Timetable Reports</a>
+            <a href="{% url 'export_fees_csv' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-download"></i> Export CSV
+            </a>
+            <button onclick="window.print();" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-printer"></i> Print
+            </button>
+        </div>
+    </div>
+
+    <!-- Date Range & Batch Filter Toolbar -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border no-print">
+        <div class="col-12 col-md-4">
+            <label class="form-label small fw-semibold text-muted">Select Batch</label>
+            <select name="batch" class="form-select form-select-sm">
+                <option value="">-- All Batches --</option>
+                {% for b in batches %}
+                <option value="{{ b.id }}" {% if selected_batch_id == b.id|stringformat:"i" %}selected{% endif %}>{{ b.name }} ({{ b.course }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small fw-semibold text-muted">From Date</label>
+            <input type="date" name="start_date" value="{{ data.start_date|date:'Y-m-d' }}" class="form-control form-control-sm">
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label small fw-semibold text-muted">To Date</label>
+            <input type="date" name="end_date" value="{{ data.end_date|date:'Y-m-d' }}" class="form-control form-control-sm">
+        </div>
+        <div class="col-12 col-md-2 d-flex align-items-end gap-1">
+            <button type="submit" class="btn btn-sm btn-taal-primary w-100 py-1">Apply Filter</button>
+            {% if selected_batch_id %}
+            <a href="{% url 'fees_reports' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Financial KPI Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-4">
+            <div class="p-3 bg-light rounded border text-center">
+                <div class="fs-4 fw-bold text-success">₹{{ data.total_collected|floatformat:2 }}</div>
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">Total Fees Collected</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-4">
+            <div class="p-3 bg-light rounded border text-center">
+                <div class="fs-4 fw-bold text-primary">₹{{ data.total_due|floatformat:2 }}</div>
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">Total Fees Billed</div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="p-3 bg-light rounded border text-center">
+                <div class="fs-4 fw-bold text-danger">₹{{ data.total_outstanding|floatformat:2 }}</div>
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">Total Outstanding Dues</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collections by Payment Method -->
+    <div class="mb-4">
+        <h5 class="fw-bold mb-3 brand-font">Collections by Payment Method</h5>
+        {% if data.method_counts %}
+        <div class="row g-3">
+            {% for method, amt in data.method_counts.items %}
+            <div class="col-6 col-md-3">
+                <div class="p-3 bg-white border rounded shadow-sm">
+                    <div class="small text-muted text-uppercase">{{ method }}</div>
+                    <div class="fs-5 fw-bold text-dark mt-1">₹{{ amt|floatformat:2 }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted small">No payment transactions recorded in this date range.</p>
+        {% endif %}
+    </div>
+
+    <!-- Outstanding Student Dues Summary -->
+    <div class="row g-4 mt-1">
+        <!-- Students with Pending Dues -->
+        <div class="col-12 col-lg-6">
+            <h5 class="fw-bold mb-2 brand-font text-danger"><i class="bi bi-clock-history"></i> Students with Pending Dues</h5>
+            {% if data.due_students or data.partial_students %}
+            <div class="taal-table-responsive">
+                <table class="taal-table small">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th class="text-end">Due</th>
+                            <th class="text-end">Paid</th>
+                            <th class="text-end">Balance</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in data.due_students %}
+                        <tr>
+                            <td><strong><a href="{% url 'student_detail' item.student.id %}" class="text-decoration-none text-dark">{{ item.student.full_name }}</a></strong></td>
+                            <td class="text-end">₹{{ item.due }}</td>
+                            <td class="text-end text-muted">₹{{ item.paid }}</td>
+                            <td class="text-end text-danger fw-bold">₹{{ item.balance }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'payment_create' %}?student={{ item.student.id }}" class="btn btn-sm btn-taal-primary py-0 px-2" style="font-size: 11px;">Record</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% for item in data.partial_students %}
+                        <tr>
+                            <td>
+                                <strong><a href="{% url 'student_detail' item.student.id %}" class="text-decoration-none text-dark">{{ item.student.full_name }}</a></strong>
+                                <span class="badge bg-warning-subtle text-warning-emphasis border ms-1" style="font-size: 10px;">Partial</span>
+                            </td>
+                            <td class="text-end">₹{{ item.due }}</td>
+                            <td class="text-end text-success">₹{{ item.paid }}</td>
+                            <td class="text-end text-danger fw-bold">₹{{ item.balance }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'payment_create' %}?student={{ item.student.id }}" class="btn btn-sm btn-taal-primary py-0 px-2" style="font-size: 11px;">Record</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-3 bg-light rounded border text-muted small">
+                <i class="bi bi-check-circle-fill text-success me-1"></i> No pending student fee balances. All tuition dues are cleared!
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Fully Paid Students -->
+        <div class="col-12 col-lg-6">
+            <h5 class="fw-bold mb-2 brand-font text-success"><i class="bi bi-check-circle"></i> Fully Paid Students</h5>
+            {% if data.paid_students %}
+            <div class="taal-table-responsive">
+                <table class="taal-table small">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th class="text-end">Billed</th>
+                            <th class="text-end">Paid in Full</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in data.paid_students %}
+                        <tr>
+                            <td><strong><a href="{% url 'student_detail' item.student.id %}" class="text-decoration-none text-dark">{{ item.student.full_name }}</a></strong></td>
+                            <td class="text-end">₹{{ item.due }}</td>
+                            <td class="text-end text-success fw-bold">₹{{ item.paid }}</td>
+                            <td class="text-center"><span class="badge bg-success-subtle text-success border">Clear</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-3 bg-light rounded border text-muted small">
+                No students with fully settled balances in this period.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

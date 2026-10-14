@@ -1,0 +1,140 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Composition Library — TAAL{% endblock %}
+{% block page_title %}Tabla Repertoire & Composition Library{% endblock %}
+
+{% block content %}
+<div class="taal-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="taal-card-title mb-1"><i class="bi bi-music-note-beamed text-warning"></i> Repertoire Library</h3>
+            <p class="text-muted small mb-0">Searchable repository of Peshkars, Kaydas, Relas, Tukdas, Parans, and Tihais.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'taal_list' %}" class="btn btn-taal-outline btn-sm">
+                <i class="bi bi-disc"></i> Taals Overview
+            </a>
+            <a href="{% url 'composition_create' %}" class="btn btn-taal-primary btn-sm">
+                <i class="bi bi-plus-lg"></i> Add Composition
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <form method="GET" class="row g-2 mb-4 bg-light p-3 rounded-3 border">
+        <div class="col-12 col-md-3">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search title or bols...">
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <select name="taal" class="form-select form-select-sm">
+                <option value="">-- All Taals --</option>
+                {% for t in taals %}
+                <option value="{{ t.id }}" {% if taal_filter == t.id|stringformat:"i" %}selected{% endif %}>{{ t.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <select name="category" class="form-select form-select-sm">
+                <option value="">-- All Categories --</option>
+                {% for code, label in category_choices %}
+                <option value="{{ code }}" {% if category_filter == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-2">
+            <select name="difficulty" class="form-select form-select-sm">
+                <option value="">-- All Difficulties --</option>
+                {% for code, label in difficulty_choices %}
+                <option value="{{ code }}" {% if difficulty_filter == code %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-md-1 d-flex gap-1">
+            <button type="submit" class="btn btn-sm btn-dark w-100">Filter</button>
+            {% if query or taal_filter or category_filter or difficulty_filter %}
+            <a href="{% url 'composition_list' %}" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-circle"></i></a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Compositions Table / Cards -->
+    {% if page_obj.object_list %}
+    <div class="row g-3">
+        {% for comp in page_obj.object_list %}
+        <div class="col-12 col-lg-6">
+            <div class="card h-100 border shadow-sm rounded-3">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-2">
+                    <div>
+                        <span class="badge bg-warning-subtle text-warning border">{{ comp.taal.name }}</span>
+                        <span class="badge bg-light text-dark border">{{ comp.get_category_display }}</span>
+                    </div>
+                    <span class="badge bg-secondary-subtle text-secondary border small">{{ comp.get_difficulty_display }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="fw-bold mb-2 brand-font">{{ comp.title }}</h5>
+
+                    <div class="bol-notation-box small py-2 px-3 my-2" style="max-height: 120px; overflow-y: auto;">
+                        {{ comp.bol_notation }}
+                    </div>
+
+                    {% if comp.recommended_tempo %}
+                    <div class="small text-muted mb-1">
+                        <strong>Laya / Tempo:</strong> {{ comp.recommended_tempo }}
+                    </div>
+                    {% endif %}
+
+                    {% if comp.practice_instructions %}
+                    <div class="small text-secondary">
+                        <strong>Riyaz Guidance:</strong> {{ comp.practice_instructions|truncatewords:20 }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top d-flex justify-content-between align-items-center py-2">
+                    <a href="{% url 'taal_detail' comp.taal.id %}" class="small text-muted text-decoration-none">
+                        View in {{ comp.taal.name }} &rarr;
+                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'lesson_create' %}?taal={{ comp.taal.id }}" class="btn btn-sm btn-taal-outline py-0 px-2" style="font-size: 11px;">
+                            Teach in Lesson
+                        </a>
+                        <a href="{% url 'composition_edit' comp.id %}" class="btn btn-sm btn-taal-primary py-0 px-2" style="font-size: 11px;">
+                            Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+        <div class="small text-muted">Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} compositions</div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&taal={{ taal_filter }}&category={{ category_filter }}&difficulty={{ difficulty_filter }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&taal={{ taal_filter }}&category={{ category_filter }}&difficulty={{ difficulty_filter }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state-box">
+        <div class="empty-state-icon"><i class="bi bi-music-note-beamed"></i></div>
+        <div class="empty-state-title">No Compositions Found</div>
+        <div class="empty-state-text">No compositions matched your filters. Click below to add a new composition.</div>
+        <a href="{% url 'composition_create' %}" class="btn btn-taal-primary"><i class="bi bi-plus-lg"></i> Add New Composition</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'academy/base.html' %}
+
+{% block title %}Offline — Radhhanand Sangeet Vidyalaya{% endblock %}
+{% block page_title %}Network Disconnected{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+        <div class="taal-card py-5">
+            <div class="empty-state-icon text-warning mb-3">
+                <i class="bi bi-wifi-off" style="font-size: 54px;"></i>
+            </div>
+            <h3 class="fw-bold mb-2">You are Currently Offline</h3>
+            <p class="text-muted small mb-4 px-3">
+                <strong>Radhhanand Sangeet Vidyalaya</strong> operates with a live secure database to keep student attendance, timetable changes, fees, and WhatsApp messages synchronized across your laptop and mobile phone.
+            </p>
+            <div class="p-3 bg-light rounded-3 text-start small mb-4">
+                <div class="fw-semibold text-dark mb-1"><i class="bi bi-info-circle text-primary me-1"></i> Data Security Note:</div>
+                <div class="text-muted">
+                    To protect sensitive student records and financial payment data, attendance marking and payments are never cached offline insecurely. Please reconnect your Android phone or laptop to Wi-Fi or mobile data to resume normal academy operations.
+                </div>
+            </div>
+            <button onclick="window.location.reload();" class="btn btn-taal-primary px-4">
+                <i class="bi bi-arrow-clockwise me-1"></i> Check Connection & Retry
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
